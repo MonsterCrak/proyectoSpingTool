@@ -35,9 +35,9 @@ public class Cliente {
 	@Column(name = "dir_cli")
 	private String direccion;
 	
-	/*@ManyToOne
-	@JoinColumn(name = "cod_dis")
-	private EntidadDistrito nombreQuelePongaFabian*/
+	@ManyToOne
+	@JoinColumn(name = "id_distrito")
+	private Distrito disCliente;
 	
 	
 	public Integer getCodigo() {

@@ -20,7 +20,7 @@ public class Distrito {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id_provincia")
+	@Column(name = "id_distrito")
 	private Integer codigo;
 	@Column(name = "nombre")
 	private String nombre;
@@ -30,14 +30,13 @@ public class Distrito {
 	@JoinColumn(name = "id_provincia")
 	private Provincia prov;//Asociación
 	
-	@OneToMany(mappedBy = "disSucursal")
-	@JsonIgnore //Anotación para evitar generar JSON del arreglo de objetos listaMedicamento
-	private List<Sucursal> listarparaSucursal;
+	@OneToMany(mappedBy = "DistritosCliente")
+	@JsonIgnore 
+	private List<Cliente> sucursales;
 
-	@OneToMany(mappedBy = "disCliente")
+	@OneToMany(mappedBy = "DistritosSucursal")
 	@JsonIgnore
-	private List<Distrito> listarparaCliente;
-
+	private List<Sucursal> clientes;
 
 	public Integer getCodigo() {
 		return codigo;
@@ -62,6 +61,25 @@ public class Distrito {
 	public void setProv(Provincia prov) {
 		this.prov = prov;
 	}
+
+	public List<Cliente> getSucursales() {
+		return sucursales;
+	}
+
+	public void setSucursales(List<Cliente> sucursales) {
+		this.sucursales = sucursales;
+	}
+
+	public List<Sucursal> getClientes() {
+		return clientes;
+	}
+
+	public void setClientes(List<Sucursal> clientes) {
+		this.clientes = clientes;
+	}
+
+	
+	
 	
 	
 }

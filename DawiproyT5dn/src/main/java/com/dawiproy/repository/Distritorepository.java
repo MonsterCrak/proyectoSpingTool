@@ -10,6 +10,6 @@ public interface Distritorepository extends JpaRepository<Distrito, Integer>{
 
 	//Select * from tb_tipo_Medicamento where cod_lab=1
 	//@Query("select tm from TipoMedicamento tm where tm.laboratorio.codigo=?1")
-	public List<Distrito> listaTiposPorProvincias(Integer codLab);
+	//public List<Distrito> listaTiposPorProvincias(Integer codLab);
 	
 }

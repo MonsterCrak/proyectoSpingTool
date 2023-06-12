@@ -18,7 +18,7 @@ public class Distritoservices {
 		return repo.findAll();
 	}
 	
-	public List<Distrito> findAllTiposPorProvincias(Integer codLab){
-		return repo.listaTiposPorProvincias(codLab);
-	}
+	//public List<Distrito> findAllTiposPorProvincias(Integer codLab){
+	//	return repo.listaTiposPorProvincias(codLab);
+	//}
 }

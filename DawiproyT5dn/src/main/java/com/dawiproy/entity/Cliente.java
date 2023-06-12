@@ -37,66 +37,91 @@ public class Cliente {
 	
 	@ManyToOne
 	@JoinColumn(name = "id_distrito")
-	private Distrito disCliente;
-	
+	private Distrito DistritosCliente;
+
 	
 	public Integer getCodigo() {
 		return codigo;
 	}
+
 	public void setCodigo(Integer codigo) {
 		this.codigo = codigo;
 	}
+
 	public String getNombre() {
 		return nombre;
 	}
+
 	public void setNombre(String nombre) {
 		this.nombre = nombre;
 	}
+
 	public String getPaterno() {
 		return paterno;
 	}
+
 	public void setPaterno(String paterno) {
 		this.paterno = paterno;
 	}
+
 	public String getMaterno() {
 		return materno;
 	}
+
 	public void setMaterno(String materno) {
 		this.materno = materno;
 	}
+
 	public String getSexo() {
 		return sexo;
 	}
+
 	public void setSexo(String sexo) {
 		this.sexo = sexo;
 	}
+
 	public Integer getDni() {
 		return dni;
 	}
+
 	public void setDni(Integer dni) {
 		this.dni = dni;
 	}
+
 	public Date getFecha() {
 		return fecha;
 	}
+
 	public void setFecha(Date fecha) {
 		this.fecha = fecha;
 	}
+
 	public Integer getCelular() {
 		return celular;
 	}
+
 	public void setCelular(Integer celular) {
 		this.celular = celular;
 	}
+
 	public String getDireccion() {
 		return direccion;
 	}
+
 	public void setDireccion(String direccion) {
 		this.direccion = direccion;
 	}
-	
+
+	public Distrito getDistritosCliente() {
+		return DistritosCliente;
+	}
+
+	public void setDistritosCliente(Distrito distritosCliente) {
+		DistritosCliente = distritosCliente;
+	}
 
 	
+
 	
 	
 }

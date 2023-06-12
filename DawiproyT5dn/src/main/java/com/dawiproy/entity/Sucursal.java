@@ -26,17 +26,11 @@ public class Sucursal {
 	private String nombre;
 	@Column(name = "telefono")
 	private String telefono;
-	
-	//relacion Muchos a Uno
+
 	@ManyToOne
 	@JoinColumn(name = "id_distrito")
-	private Distrito disSucursal;//Asociación
-	
-	@OneToMany(mappedBy = "sucursal")
-	@JsonIgnore
-	private List<Empleado> listaparaEmpleados;
+	private Distrito DistritosSucursal;//Asociación
 
-	
 	public Integer getCodigo() {
 		return codigo;
 	}
@@ -61,32 +55,15 @@ public class Sucursal {
 		this.telefono = telefono;
 	}
 
-	public Distrito getDis() {
-		return disSucursal;
+	public Distrito getDistritosSucursal() {
+		return DistritosSucursal;
 	}
 
-	public void setDis(Distrito disSucursal) {
-		this.disSucursal = disSucursal;
+	public void setDistritosSucursal(Distrito distritosSucursal) {
+		DistritosSucursal = distritosSucursal;
 	}
 
-	public Distrito getDisSucursal() {
-		return disSucursal;
-	}
 
-	public void setDisSucursal(Distrito disSucursal) {
-		this.disSucursal = disSucursal;
-	}
 
-	public List<Empleado> getListaparaEmpleados() {
-		return listaparaEmpleados;
-	}
-
-	public void setListaparaEmpleados(List<Empleado> listaparaEmpleados) {
-		this.listaparaEmpleados = listaparaEmpleados;
-	}
-	
-	
-	
-	
 	
 }

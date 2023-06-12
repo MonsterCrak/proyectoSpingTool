@@ -1,5 +1,9 @@
 package com.dawiproy.entity;
 
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -7,6 +11,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -25,9 +30,13 @@ public class Sucursal {
 	//relacion Muchos a Uno
 	@ManyToOne
 	@JoinColumn(name = "id_distrito")
-	private Distrito dis;//Asociación
+	private Distrito disSucursal;//Asociación
 	
+	@OneToMany(mappedBy = "sucursal")
+	@JsonIgnore
+	private List<Empleado> listaparaEmpleados;
 
+	
 	public Integer getCodigo() {
 		return codigo;
 	}
@@ -53,12 +62,30 @@ public class Sucursal {
 	}
 
 	public Distrito getDis() {
-		return dis;
+		return disSucursal;
 	}
 
-	public void setDis(Distrito dis) {
-		this.dis = dis;
+	public void setDis(Distrito disSucursal) {
+		this.disSucursal = disSucursal;
 	}
+
+	public Distrito getDisSucursal() {
+		return disSucursal;
+	}
+
+	public void setDisSucursal(Distrito disSucursal) {
+		this.disSucursal = disSucursal;
+	}
+
+	public List<Empleado> getListaparaEmpleados() {
+		return listaparaEmpleados;
+	}
+
+	public void setListaparaEmpleados(List<Empleado> listaparaEmpleados) {
+		this.listaparaEmpleados = listaparaEmpleados;
+	}
+	
+	
 	
 	
 	

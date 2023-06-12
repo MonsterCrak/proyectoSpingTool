@@ -1,6 +1,6 @@
 package com.dawiproy.entity;
 
-import java.time.LocalDate;
+import java.util.Date;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -29,7 +29,7 @@ public class Cliente {
 	@Column(name = "dni_cli")
 	private Integer dni;
 	@Column(name = "fec_nac_cli")
-	private LocalDate fecha;
+	private Date fecha;
 	@Column(name = "cel_cli")
 	private Integer celular;
 	@Column(name = "dir_cli")
@@ -76,10 +76,10 @@ public class Cliente {
 	public void setDni(Integer dni) {
 		this.dni = dni;
 	}
-	public LocalDate getFecha() {
+	public Date getFecha() {
 		return fecha;
 	}
-	public void setFecha(LocalDate fecha) {
+	public void setFecha(Date fecha) {
 		this.fecha = fecha;
 	}
 	public Integer getCelular() {

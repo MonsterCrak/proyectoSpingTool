@@ -1,0 +1,70 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
+  <head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Intranet</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+  	
+<style type="text/css">
+	:root{
+	  --main-bg:#0dcaf0;
+	}
+	
+	.main-bg {
+	  background: var(--main-bg) !important;
+	}
+	
+	input:focus, button:focus {
+	  border: 1px solid var(--main-bg) !important;
+	  box-shadow: none !important;
+	}
+	
+	.form-check-input:checked {
+	  background-color: var(--main-bg) !important;
+	  border-color: var(--main-bg) !important;
+	}
+	
+	.card, .btn, input{
+	  border-radius:0 !important;
+	}
+
+</style>
+</head>
+<body class="main-bg">
+  <!-- Login Form -->
+  <div class="container">
+    <div class="row justify-content-center" style="margin-top: 300px!important">
+      <div class="col-lg-4 col-md-6 col-sm-6">
+		  	<div class="alert alert-danger" th:if="${param.error}">Clave incorrecta</div>
+			<div class="alert alert-success" th:if="${param.logout}">Sesión terminada</div>
+        <div class="card shadow">
+          <div class="card-title text-center border-bottom">
+            <h2 class="p-3">INTRANET</h2>
+          </div>
+          <div class="card-body">
+            <form method="post" th:action="@{/validar/usuario}">
+              <div class="mb-4">
+                <label for="username" class="form-label font-weight-bold">Username/Email</label>
+                <input type="text" class="form-control" id="username" name="username"/>
+              </div>
+              <div class="mb-4">
+                <label for="password" class="form-label font-weight-bold">Password</label>
+                <input type="password" class="form-control" id="password" name="password"/>
+              </div>
+              <div class="d-grid">
+                <button type="submit" class="btn text-light main-bg">Login</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+  
+</body>
+
+</html>
+
+
+</html>

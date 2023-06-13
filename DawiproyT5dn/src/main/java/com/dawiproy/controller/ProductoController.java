@@ -15,8 +15,11 @@ public class ProductoController {
 	private Productoservices serProducto;
 	
 	
-	@RequestMapping(name = "/lista")
-	private String lista(Model model) {
-		return "Producto";
-	}
+	//@RequestMapping(name = "/lista")
+	//private String lista(Model model) {
+	//	return "Producto";
+	//}
 }
+
+
+

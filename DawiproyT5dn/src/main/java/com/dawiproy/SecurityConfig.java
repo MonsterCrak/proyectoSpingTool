@@ -31,7 +31,7 @@ public class SecurityConfig{
 		http.csrf().disable().authorizeHttpRequests().
 		requestMatchers("/validar/**").permitAll().
 		and().authorizeHttpRequests().
-		requestMatchers("/producto/**","/empleado/**","/sucursal/**").authenticated().
+		requestMatchers("/producto/**","/empleado/**","/sucursal/**","/cliente/**","/boleta/**").authenticated().
 		and().formLogin().loginPage("/validar/usuario").
 		defaultSuccessUrl("/validar/intranet");
 

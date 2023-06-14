@@ -29,7 +29,7 @@ public class Cliente {
 	@Column(name = "dni_cli")
 	private Integer dni;
 	@Column(name = "fec_nac_cli")
-	private Date fecha;
+	private String fecha;
 	@Column(name = "cel_cli")
 	private Integer celular;
 	@Column(name = "dir_cli")
@@ -88,11 +88,13 @@ public class Cliente {
 		this.dni = dni;
 	}
 
-	public Date getFecha() {
+	
+
+	public String getFecha() {
 		return fecha;
 	}
 
-	public void setFecha(Date fecha) {
+	public void setFecha(String fecha) {
 		this.fecha = fecha;
 	}
 

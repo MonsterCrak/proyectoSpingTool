@@ -32,4 +32,8 @@ public class Sucursalservices {
 	public List<Sucursal> listarTodos(){
 		return repo.findAll();
 	}
+	
+	public List<Sucursal> listarSucursalesPorNombre(String nom){
+		return repo.findByNombreStartingWith(nom);
+	}
 }

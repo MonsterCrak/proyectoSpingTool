@@ -10,7 +10,7 @@
 <body>
 	<!-- Insertando un fragmento para el menu -->
 	<div th:insert="plantilla/UITemplate :: menu"></div>
-	
+
 	<!-- Contenedor principal INICIO-->
 	<div class="container">
 
@@ -25,7 +25,7 @@
 			<i class="far fa-file"></i> Nuevo Empleado
 		</button>
 		<!-- Boton nuevo FIN-->
-		
+
 		<!-- tabla INICIO-->
 		<div class=" mt-2">
 
@@ -53,7 +53,7 @@
 						<!--td th:text="${row.usuario.login}"></td-->
 						<!--td th:text="${row.sucursal.nombre}"></td-->
 						<td><a class="btn btn-info btn-editar" data-toggle="modal" data-target="#modalEmpleado">
-							<i class="fa-light fa-pen-to-square"></i></a></td>
+								<i class="fa-light fa-pen-to-square"></i></a></td>
 						<td><a class="btn btn-danger btn-eliminar"><i class="fa-regular fa-trash"></i></a></td>
 					</tr>
 				</tbody>
@@ -67,108 +67,98 @@
 
 
 		<!-- Modal INICIO-->
-		<!-- Modificar id-->
 		<div class="modal fade" id="modalEmpleado" data-backdrop="static" data-keyboard="false" tabindex="-1"
 			aria-labelledby="exampleModalLabel" aria-hidden="true">
 			<div class="modal-dialog modal-dialog-centered modal-login modal-lg">
 				<div class="modal-content">
 					<div class="modal-header bg-blue-darker">
-						<h4 class="modal-title text-white">Medicamento</h4>
+						<h4 class="modal-title text-white">Empleado</h4>
 					</div>
 					<div class="modal-body">
 						<!-- Modificar form, action-->
-						<form method="POST" id="idRegistra" action="/medicamento/grabar">
-							<input type="hidden" id="idCodigo" name="codigo" value="0">
+						<form method="POST" id="idRegistra" action="/empleado/registrar">
 							<div class="container">
 								<div class="row">
-									
 									<!-- Input INICIO -->
-									<div class="form-group has-feedback col-md-12">
+									<div class="form-group has-feedback col-md-6">
+										<label for="exampleInputEmail1"><b>Codigo</b></label><br>
+										<i class="fas fa-file-signature form-control-feedback2"></i>
+										<input type="text" class="form-control" id="idCodigo" placeholder="Ingresar DNI"
+											name="codigo">
+									</div>
+									<!-- Input FIN -->
+
+									<!-- Input INICIO -->
+									<div class="form-group has-feedback col-md-6">
 										<label for="exampleInputEmail1"><b>Nombre</b></label><br>
 										<i class="fas fa-file-signature form-control-feedback2"></i>
 										<input type="text" class="form-control" id="idNombre"
 											placeholder="Ingresar nombre" name="nombre">
 									</div>
 									<!-- Input FIN -->
-									
+
 									<!-- Input INICIO -->
 									<!-- name, id -->
-									<div class="form-group has-feedback col-md-12">
-										<label for="exampleInputEmail1"><b>APELLIDO</b></label><br>
+									<div class="form-group has-feedback col-md-6">
+										<label for="exampleInputEmail1"><b>Apellido</b></label><br>
 										<i class="fas fa-file-signature form-control-feedback2"></i>
-										<input type="text" class="form-control" id="idNombre"
-											placeholder="Ingresar nombre" name="nombre">
+										<input type="text" class="form-control" id="idApellido"
+											placeholder="Ingresar nombre" name="apellido">
 									</div>
 									<!-- Input FIN -->
-									
-									<!-- Input INICIO -->
-									<div class="form-group has-feedback col-md-12">
-										<label for="exampleInputEmail1"><b>Descripción(Detalle)</b></label><br>
-										<textarea class="form-control" id="idDescripcion" rows="6" name="descripcion"
-											placeholder="Ingresar descripción"
-											style="padding-left: 5px!important;"></textarea>
-									</div>
-									<!-- Input FIN -->
-									<!-- Input INICIO -->
-									<div class="form-group has-feedback col-md-4">
-										<label for="exampleInputEmail1"><b>Stock</b></label><br>
-										<i class="fas fa-pen-fancy form-control-feedback2"></i>
-										<input type="text" class="form-control" id="idStock"
-											placeholder="Ingresar stock" name="stock">
-									</div>
-									<!-- Input FIN -->
-									<!-- Input INICIO -->
-									<div class="form-group has-feedback col-md-4">
-										<label for="exampleInputEmail1"><b>Precio</b></label><br>
-										<i class="fas fa-money-check-alt form-control-feedback2"></i>
-										<input type="text" class="form-control" id="idPrecio"
-											placeholder="Ingresar precio" name="precio">
-									</div>
-									<!-- Input FIN -->
+
 									<!-- Input INICIO -->
 									<div class="form-group has-feedback col-md-4">
 										<label for="exampleInputEmail1" class="text-center"><b>Fecha
-												vencimiento</b></label><br>
+												de Nacimiento</b></label><br>
 										<i class="fas fa-calendar-week form-control-feedback2"></i>
 										<input type="text" style="background-color:#aed6f1" class="form-control"
-											id="usr1" placeholder="YYYY-MM-DD" autocomplete="off" name="vencimiento">
+											id="usr1" placeholder="YYYY-MM-DD" autocomplete="off" name="nacimiento">
 
 									</div>
 									<!-- Input FIN -->
+
 									<!-- Select INICIO -->
 									<div class="form-group has-feedback col-md-6">
-										<label for="exampleInputEmail1"><b>Laboratorio</b></label><br>
+										<label for="exampleInputEmail1"><b>Puesto</b></label><br>
 										<i class="fas fa-prescription-bottle-alt form-control-feedback2"></i>
-										<select class="form-control" id="idLaboratorio" name="laboratorio">
-											<option value=" ">[Seleccione Laboratorio]</option>
+										<select class="form-control" id="idPuesto" name="puesto">
+											<option value=" ">[Seleccione Puesto]</option>
+											<option value="Administrador">Administrador</option>
+											<option value="Caja">Cajero</option>
+											<option value="Contabilidad">Contabilidad</option>
+
+										</select>
+									</div>
+									<!-- Select FIN -->
+
+									<!-- Input INICIO -->
+									<div class="form-group has-feedback col-md-4">
+										<label for="exampleInputEmail1"><b>Salario</b></label><br>
+										<i class="fas fa-money-check-alt form-control-feedback2"></i>
+										<input type="text" class="form-control" id="idSalario"
+											placeholder="Ingresar salario" name="salario">
+									</div>
+									<!-- Input FIN -->
+
+									<!-- Select INICIO -->
+									<div class="form-group has-feedback col-md-6">
+										<label for="exampleInputEmail1"><b>Sucursal</b></label><br>
+										<i class="fas fa-prescription-bottle-alt form-control-feedback2"></i>
+										<select class="form-control" id="idSucursal" name="sucursal">
+											<option value=" ">[Seleccione Sucursal]</option>
 
 											<!--Por lenguaje de expresion traemos los tipos a la vista
 													      hacemos uso de utext para traer los datos al option, tambien con lenguaje de expresion
 													      tambien se le da el value para obtener el codigo de la seleccion en el combobox-->
-											<option th:each="fila:${laboratorios}" th:utext="${fila.nombre}"
+											<option th:each="fila:${sucursales}" th:utext="${fila.nombre}"
 												th:value="${fila.codigo}" />
 										</select>
 									</div>
 									<!-- Select FIN -->
-									
-									<!-- Select INICIO -->
-									<div class="form-group has-feedback col-md-6">
-										<label for="exampleInputEmail1"><b>Tipo Medicamento</b></label><br>
-										<i class="fas fa-prescription-bottle-alt form-control-feedback2"></i>
-										<select class="form-control" id="idTipo" name="tipo">
-											<option value=" ">[Seleccione Tipo Medicamento]</option>
-
-											<!--Por lenguaje de expresion traemos los tipos a la vista
-													      hacemos uso de utext para traer los datos al option, tambien con lenguaje de expresion
-													      tambien se le da el value para obtener el codigo de la seleccion en el combobox-->
-											<option/>
-										</select>
-									</div>
-									<!-- Select FIN -->
-									
 								</div>
 							</div>
-							
+
 							<!-- BOTONES INICIO -->
 							<div class="col-md-12 text-center mt-4">
 								<button type="submit" id="Guardar" class="btn btn-primary"><i class="fas fa-save"></i>
@@ -176,7 +166,7 @@
 								<button type="button" id="btn-cerrar" class="btn btn-danger" data-dismiss="modal"><i
 										class="fas fa-undo-alt"></i> Cancelar</button>
 							</div>
-							
+
 							<!-- BOTONES FIN -->
 						</form>
 					</div>
@@ -184,27 +174,23 @@
 			</div>
 		</div>
 		<!-- Modal FIN-->
-		
-		
-		
-		
-		<!-- Modal para eliminar INICIO-->
-		<form action="/medicamento/eliminar" method="post" id="form-eliminar">
-			<input type="hidden" name="codigoEliminar" id="codigo-eliminar">
-		</form>
-		<!-- Modal para eliminar FIN-->
-		
+
+
+
+
+	
+
 	</div>
 	<!-- Contenedor principal FIN-->
-	
-	
-	
-	
+
+
+
+
 	<!-- Insertando un fragmento para el pie -->
 	<div th:insert="plantilla/UITemplate :: pie"></div>
-	
-	
-	
+
+
+
 	<!--Alert consumible-->
 	<script th:inline="javascript" th:if="${Mensaje!=null}">
 		//Recuperar atributo mensaje
@@ -220,8 +206,8 @@
 
 
 	<script>
-		let codigoTipo=-1;
-		
+		let codigoTipo = -1;
+
 		$('#tableEmpleados').DataTable();
 		$(function () {
 			$('#usr1').datepicker({
@@ -240,48 +226,34 @@
 			let cod;
 			//obtener el codigo del medicamento actual según el boton que se presiono
 			cod = $(this).parents("tr").find("td")[0].innerHTML;
+
 			//trabajar con la funcion get para llmaar a la RUTA "buscar"
-			$.get("/medicamento/buscar?codigo=" + cod, function (response) {
+			$.get("/empleado/buscar?codigo=" + cod, function (response) {
+				let puesto = response.puesto;
+				$("#idCodigo").val(response.codigo).prop("readonly", true);
 				//Imprimir en los controles el valor del JSON
 				$("#idCodigo").val(response.codigo);
 				$("#idNombre").val(response.nombre);
-				$("#idDescripcion").val(response.descripcion);
-				$("#idStock").val(response.stock);
-				$("#idPrecio").val(response.precio);
-				$("#usr1").val(response.fecha);
-				//$("#idTipo").val(response.tipo.codigo);
-				$("#idLaboratorio").val(response.tipo.laboratorio.codigo);
-				codigoTipo=response.tipo.codigo;
+				$("#idApellido").val(response.apellido);
+				$("#usr1").val(response.fecha_nacimiento);
+
+				$("#idPuesto").val(puesto).change();
+
+				$("#idSalario").val(response.salario);
+				$("#idSucursal").val(response.sucursal.codigo);
 				//llamar al evento change del combo idLaboratorio
-				$("#idLaboratorio").trigger("change")
+				$("#idSucursal").trigger("change")
 				console.log(response);
 			})
 		})
 
 
-		//Asignar evento click a todos los botones con nombre de clase ".btm-eliminar"
-		$(document).on("click", ".btn-eliminar", function () {
-			let cod;
-			//obtener el codigo del medicamento actual según el boton que se presiono
-			cod = $(this).parents("tr").find("td")[0].innerHTML;
-			$("#codigo-eliminar").val(cod);
-			alertify.confirm("SISTEMA", "Seguro de eliminar!",
-				function () {//SI
-				$("#form-eliminar").submit();
-				},
-				function () {//NO
-					alertify.error('Cancelado!')
-				}).
-				set('labels', {ok: 'Si', cancel: 'No'}); F
-
-		})
 
 
 		//asignar evento clic al botón con ID btn-cerrar
 		$(document).on("click", "#btn-cerrar", function () {
 			//resetear formulario
 			$("#idRegistra").trigger("reset");
-			$("#idCodigo").val(0);
 			//resetear validaciones
 			$("#idRegistra").data("bootstrapValidator").resetForm(true);
 		})
@@ -291,17 +263,17 @@
 		$(document).on("change", "#idLaboratorio", function () {
 			//obtener el código del laboratorio actual
 			let codLab;
-			codLab=$(this).val();
+			codLab = $(this).val();
 			//limpiar combo idTipo
 			$("#idTipo").empty().append("<option value=' '>[Seleccione Tipo Medicamento]</option>");
 			//get
-			$.get("/medicamento/listarTipos?codigo="+codLab,function(response){
+			$.get("/medicamento/listarTipos?codigo=" + codLab, function (response) {
 				//bucle
-				$.each(response,function(index,item){
-					$("#idTipo").append("<option value='"+item.codigo+"'>"+item.nombre+"</option>");		
+				$.each(response, function (index, item) {
+					$("#idTipo").append("<option value='" + item.codigo + "'>" + item.nombre + "</option>");
 				})
 				//marcar el tipo de medicamento				
-				$("#idTipo").val(codigoTipo);				
+				$("#idTipo").val(codigoTipo);
 			})
 		})
 

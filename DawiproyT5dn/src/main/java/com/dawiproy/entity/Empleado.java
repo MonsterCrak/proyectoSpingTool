@@ -1,14 +1,15 @@
 package com.dawiproy.entity;
 
-import java.util.Date;
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -16,9 +17,8 @@ import jakarta.persistence.Table;
 public class Empleado {
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id_empleado")
-	private int codigo;
+	private String codigo;
 	
 	@Column(name = "nombre")
 	private String nombre;
@@ -27,7 +27,7 @@ public class Empleado {
 	private String apellido;
 	
 	@Column(name = "fecha_nacimiento")
-	private Date fecha_nacimiento;
+	private String fecha_nacimiento;
 	
 	@Column(name = "puesto")
 	private String puesto;
@@ -36,18 +36,21 @@ public class Empleado {
 	private double salario;
 	
 	@ManyToOne
-	@JoinColumn(name = "cod_usu")
-	private Usuario usuario;
-	
-	@ManyToOne
 	@JoinColumn(name = "id_sucursal")
 	private Sucursal sucursal;
 
-	public int getCodigo() {
+	
+	@OneToMany(mappedBy = "emp")
+	@JsonIgnore
+	private List<Usuario> listaUsuario;
+	
+
+
+	public String getCodigo() {
 		return codigo;
 	}
 
-	public void setCodigo(int codigo) {
+	public void setCodigo(String codigo) {
 		this.codigo = codigo;
 	}
 
@@ -67,11 +70,11 @@ public class Empleado {
 		this.apellido = apellido;
 	}
 
-	public Date getFecha_nacimiento() {
+	public String getFecha_nacimiento() {
 		return fecha_nacimiento;
 	}
 
-	public void setFecha_nacimiento(Date fecha_nacimiento) {
+	public void setFecha_nacimiento(String fecha_nacimiento) {
 		this.fecha_nacimiento = fecha_nacimiento;
 	}
 
@@ -91,14 +94,6 @@ public class Empleado {
 		this.salario = salario;
 	}
 
-	public Usuario getUsuario() {
-		return usuario;
-	}
-
-	public void setUsuario(Usuario usuario) {
-		this.usuario = usuario;
-	}
-
 	public Sucursal getSucursal() {
 		return sucursal;
 	}
@@ -106,6 +101,15 @@ public class Empleado {
 	public void setSucursal(Sucursal sucursal) {
 		this.sucursal = sucursal;
 	}
+
+	public List<Usuario> getListaUsuario() {
+		return listaUsuario;
+	}
+
+	public void setListaUsuario(List<Usuario> listaUsuario) {
+		this.listaUsuario = listaUsuario;
+	}
+
 	
 	
 	

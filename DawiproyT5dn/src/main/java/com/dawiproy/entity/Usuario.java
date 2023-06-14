@@ -23,6 +23,10 @@ public class Usuario {
 	@JoinColumn(name="idrol")
 	private Rol rol;
 	
+	@ManyToOne
+	@JoinColumn(name = "id_empleado")
+	private Empleado emp;
+	
 	//@OneToMany(mappedBy = "usuario")
 	//private List<Boleta> listaBoleta;
 	
@@ -66,6 +70,15 @@ public class Usuario {
 	public void setRol(Rol rol) {
 		this.rol = rol;
 	}
+	
+	public Empleado getEmp() {
+		return emp;
+	}
+	public void setEmp(Empleado emp) {
+		this.emp = emp;
+	}
+	
+
 
 	
 

@@ -22,13 +22,15 @@ public class Empleadoservices {
         repo.save(bean);
     }
 	
-	public Empleado buscarPorId(Integer cod) {
-	     return repo.findById(cod).orElse(null);
+	public Empleado buscarPorId(String cod) {
+	    return repo.findByCodigoEmpleado(cod);
 	}
+
 	
-	public void eliminarPorID(Integer cod) {
-        repo.deleteById(cod);
+	public void eliminarPorID(String cod) {
+        repo.deleteByCodigoEmpleado(cod);
     }
+	
 	
 	public List<Empleado> listarTodos(){
 		return repo.findAll();

@@ -178,7 +178,7 @@
 
 
 
-	
+
 
 	</div>
 	<!-- Contenedor principal FIN-->
@@ -199,15 +199,20 @@
 				"timeOut": "2000",
 				"positionClass ": " toast-top-right ",
 			});
+
 	</script>
 
 
 
 
 
-	<script>
-		let codigoTipo = -1;
+	<script th:src="@{/js/Empleado.js}">
 
+
+
+	</script>
+
+	<script>
 		$('#tableEmpleados').DataTable();
 		$(function () {
 			$('#usr1').datepicker({
@@ -219,65 +224,6 @@
 		$('#usr1').on('changeDate show', function (e) {
 			$('#idRegistra').bootstrapValidator('revalidateField', $('#usr1'));
 		});
-
-
-		//Asignar evento click a todos los botones con nombre de clase ".btn-editar"
-		$(document).on("click", ".btn-editar", function () {
-			let cod;
-			//obtener el codigo del medicamento actual según el boton que se presiono
-			cod = $(this).parents("tr").find("td")[0].innerHTML;
-
-			//trabajar con la funcion get para llmaar a la RUTA "buscar"
-			$.get("/empleado/buscar?codigo=" + cod, function (response) {
-				let puesto = response.puesto;
-				$("#idCodigo").val(response.codigo).prop("readonly", true);
-				//Imprimir en los controles el valor del JSON
-				$("#idCodigo").val(response.codigo);
-				$("#idNombre").val(response.nombre);
-				$("#idApellido").val(response.apellido);
-				$("#usr1").val(response.fecha_nacimiento);
-
-				$("#idPuesto").val(puesto).change();
-
-				$("#idSalario").val(response.salario);
-				$("#idSucursal").val(response.sucursal.codigo);
-				//llamar al evento change del combo idLaboratorio
-				$("#idSucursal").trigger("change")
-				console.log(response);
-			})
-		})
-
-
-
-
-		//asignar evento clic al botón con ID btn-cerrar
-		$(document).on("click", "#btn-cerrar", function () {
-			//resetear formulario
-			$("#idRegistra").trigger("reset");
-			//resetear validaciones
-			$("#idRegistra").data("bootstrapValidator").resetForm(true);
-		})
-
-
-		//asignar evento change al select con ID idLaboratorio
-		$(document).on("change", "#idLaboratorio", function () {
-			//obtener el código del laboratorio actual
-			let codLab;
-			codLab = $(this).val();
-			//limpiar combo idTipo
-			$("#idTipo").empty().append("<option value=' '>[Seleccione Tipo Medicamento]</option>");
-			//get
-			$.get("/medicamento/listarTipos?codigo=" + codLab, function (response) {
-				//bucle
-				$.each(response, function (index, item) {
-					$("#idTipo").append("<option value='" + item.codigo + "'>" + item.nombre + "</option>");
-				})
-				//marcar el tipo de medicamento				
-				$("#idTipo").val(codigoTipo);
-			})
-		})
-
-
 
 
 	</script>
@@ -301,38 +247,6 @@
 							}
 						}
 					},
-					Descripcion: {
-						selector: '#idDescripcion',
-						validators: {
-							notEmpty: {
-								message: 'Ingrese descripción'
-							}
-						}
-					},
-					Stock: {
-						selector: '#idStock',
-						validators: {
-							notEmpty: {
-								message: 'Ingrese stock'
-							},
-							regexp: {
-								regexp: /^[0-9]{1,2}$/,
-								message: 'Campo stock hasta dos cifras'
-							},
-						}
-					},
-					precio: {
-						selector: '#idPrecio',
-						validators: {
-							notEmpty: {
-								message: 'Ingrese precio'
-							},
-							regexp: {
-								regexp: /^(\d+|[0-9]+\.\d{1,2})$/,
-								message: 'Campo precio real hasta dos decimales'
-							},
-						}
-					},
 					Fecha: {
 						selector: '#usr1',
 						validators: {
@@ -342,14 +256,6 @@
 							date: {
 								format: 'YYYY-MM-DD',
 								message: 'The format is dd/mm/yyyy'
-							},
-						}
-					},
-					Tipo: {
-						selector: '#idTipo',
-						validators: {
-							notEmpty: {
-								message: 'Seleccione tipo medicamento'
 							},
 						}
 					}

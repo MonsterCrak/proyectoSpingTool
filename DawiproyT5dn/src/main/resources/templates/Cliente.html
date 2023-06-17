@@ -10,7 +10,7 @@
 <body>
 	<!-- Insertando un fragmento para el menu -->
 	<div th:insert="plantilla/UITemplate :: menu"></div>
-	
+
 	<!-- Contenedor principal INICIO-->
 	<div class="container">
 
@@ -25,7 +25,7 @@
 			<i class="far fa-file"></i> Nuevo Cliente
 		</button>
 		<!-- Boton nuevo FIN-->
-		
+
 		<!-- tabla INICIO-->
 		<div class=" mt-2">
 
@@ -40,7 +40,7 @@
 						<th>DNI</th>
 						<th>Fecha</th>
 						<th>Celular</th>
-						<th>Direccion</th>
+						<th>Distrito</th>
 						<!--th>Usuario</th-->
 						<!--th>Sucursal</th-->
 						<th></th>
@@ -48,7 +48,7 @@
 					</tr>
 				</thead>
 				<tbody>
-					<tr th:each="row:${clientes}">
+					<tr th:each="row:${cliente}">
 						<td th:text="${row.codigo}"></td>
 						<td th:text="${row.nombre}"></td>
 						<td th:text="${row.paterno}"></td>
@@ -57,12 +57,12 @@
 						<td th:text="${row.dni}"></td>
 						<td th:text="${row.fecha}"></td>
 						<td th:text="${row.celular}"></td>
-						<td th:text="${row.direccion}"></td>
+						<td th:text="${row.DistritosCliente.nombre}"></td>
 						<!--td th:text="${row.usuario.login}"></td-->
 						<!--td th:text="${row.sucursal.nombre}"></td-->
 						<td><a class="btn btn-info btn-editar" data-toggle="modal" data-target="#modalCliente">
-							<i class="fa-light fa-pen-to-square"></i></a></td>
-						<td><a class="btn btn-danger btn-eliminar"><i class="fa-regular fa-trash"></i></a></td>
+								<i class="far fa-edit"></i></a></td>
+						<td><a class="btn btn-danger btn-eliminar"><i class="far fa-trash-alt"></i></a></td>
 					</tr>
 				</tbody>
 			</table>
@@ -89,7 +89,7 @@
 							<input type="hidden" id="idCodigo" name="codigo" value="0">
 							<div class="container">
 								<div class="row">
-									
+
 									<!-- Input INICIO -->
 									<div class="form-group has-feedback col-md-12">
 										<label for="exampleInputEmail1"><b>Nombre</b></label><br>
@@ -98,7 +98,7 @@
 											placeholder="Ingresar nombre" name="nombre">
 									</div>
 									<!-- Input FIN -->
-									
+
 									<!-- Input INICIO -->
 									<!-- name, id -->
 									<div class="form-group has-feedback col-md-12">
@@ -108,7 +108,7 @@
 											placeholder="Ingresar apellido paterno" name="paterno">
 									</div>
 									<!-- Input FIN -->
-									
+
 									<!-- Input INICIO -->
 									<!-- name, id -->
 									<div class="form-group has-feedback col-md-12">
@@ -118,37 +118,39 @@
 											placeholder="Ingresar apellido materno" name="materno">
 									</div>
 									<!-- Input FIN -->
-									
-									<!-- Input INICIO -->
-									<!-- name, id -->
-									<div class="form-group has-feedback col-md-12">
-										<label for="exampleInputEmail1"><b>SEXO</b></label><br>
-										<i class="fas fa-file-signature form-control-feedback2"></i>
-										<input type="text" class="form-control" id="idSexo"
-											placeholder="Ingresar sexo" name="sexo">
+
+									<!-- Select INICIO -->
+									<div class="form-group has-feedback col-md-6">
+										<label for="exampleInputEmail1"><b>Sexo</b></label><br>
+										<i class="fas fa-prescription-bottle-alt form-control-feedback2"></i>
+										<select class="form-control" id="idSexo" name="sexo">
+											<option value=" ">[Seleccione Sexo]</option>
+											<option value="Masculino">Masculino</option>
+											<option value="Femenino">Femenino</option>
+										</select>
 									</div>
-									<!-- Input FIN -->
-								
+									<!-- Select FIN -->
+
 									<!-- Input INICIO -->
 									<div class="form-group has-feedback col-md-4">
 										<label for="exampleInputEmail1"><b>DNI</b></label><br>
 										<i class="fas fa-pen-fancy form-control-feedback2"></i>
-										<input type="text" class="form-control" id="idDni"
-											placeholder="Ingresar dni" name="dni">
+										<input type="text" class="form-control" id="idDni" placeholder="Ingresar dni"
+											name="dni">
 									</div>
 									<!-- Input FIN -->
-									
+
 									<!-- Input INICIO -->
 									<div class="form-group has-feedback col-md-4">
 										<label for="exampleInputEmail1" class="text-center"><b>Fecha
 												vencimiento</b></label><br>
 										<i class="fas fa-calendar-week form-control-feedback2"></i>
 										<input type="text" style="background-color:#aed6f1" class="form-control"
-											id="usr1" placeholder="YYYY-MM-DD" autocomplete="off" name="vencimiento">
+											id="usr1" placeholder="YYYY-MM-DD" autocomplete="off" name="fecha">
 
 									</div>
 									<!-- Input FIN -->
-									
+
 									<!-- Input INICIO -->
 									<div class="form-group has-feedback col-md-4">
 										<label for="exampleInputEmail1"><b>CELULAR</b></label><br>
@@ -157,7 +159,7 @@
 											placeholder="Ingresar celular" name="celular">
 									</div>
 									<!-- Input FIN -->
-									
+
 									<!-- Input INICIO -->
 									<div class="form-group has-feedback col-md-4">
 										<label for="exampleInputEmail1"><b>DIRECCION</b></label><br>
@@ -166,8 +168,8 @@
 											placeholder="Ingresar direccion" name="direccion">
 									</div>
 									<!-- Input FIN -->
-									
-									
+
+
 									<!-- Select INICIO -->
 									<div class="form-group has-feedback col-md-6">
 										<label for="exampleInputEmail1"><b>Provincia</b></label><br>
@@ -183,7 +185,7 @@
 										</select>
 									</div>
 									<!-- Select FIN -->
-									
+
 									<!-- Select INICIO -->
 									<div class="form-group has-feedback col-md-6">
 										<label for="exampleInputEmail1"><b>Distritos</b></label><br>
@@ -194,14 +196,14 @@
 											<!--Por lenguaje de expresion traemos los tipos a la vista
 													      hacemos uso de utext para traer los datos al option, tambien con lenguaje de expresion
 													      tambien se le da el value para obtener el codigo de la seleccion en el combobox-->
-											<option/>
+											<option />
 										</select>
 									</div>
 									<!-- Select FIN -->
-									
+
 								</div>
 							</div>
-							
+
 							<!-- BOTONES INICIO -->
 							<div class="col-md-12 text-center mt-4">
 								<button type="submit" id="Guardar" class="btn btn-primary"><i class="fas fa-save"></i>
@@ -209,7 +211,7 @@
 								<button type="button" id="btn-cerrar" class="btn btn-danger" data-dismiss="modal"><i
 										class="fas fa-undo-alt"></i> Cancelar</button>
 							</div>
-							
+
 							<!-- BOTONES FIN -->
 						</form>
 					</div>
@@ -217,29 +219,22 @@
 			</div>
 		</div>
 		<!-- Modal FIN-->
-		
-		
-		
-		
-		<!-- Modal para eliminar INICIO-->
-		<form action="/medicamento/eliminar" method="post" id="form-eliminar">
-			<input type="hidden" name="codigoEliminar" id="codigo-eliminar">
-		</form>
-		<!-- Modal para eliminar FIN-->
-		
+
+
+
 	</div>
 	<!-- Contenedor principal FIN-->
-	
-	
-	
-	
+
+
+
+
 	<!-- Insertando un fragmento para el pie -->
 	<div th:insert="plantilla/UITemplate :: pie"></div>
-	
-	
-	
+
+
+
 	<!--Alert consumible-->
-	<script th:inline="javascript" th:if="${Mensaje!=null}">
+	<script h:inline="javascript" th:if="${Mensaje!=null}">
 		//Recuperar atributo mensaje
 		let men =/*[[${Mensaje}]]*/
 			toastr.success(men, toastr.options = {
@@ -248,14 +243,155 @@
 			});
 	</script>
 
+	 <script>
+		 
+		 $(document).on("click", "#Guardar", function () {
+    // Desactivar el botón de registro
+    $(this).prop("disabled", true);
 
+    // Obtener los valores de los campos de entrada
+    let codigo = $("#idCodigo").val();
+    let nombre = $("#idNombre").val();
+    let paterno = $("#idPaterno").val();
+    let materno = $("#idMaterno").val();
+    let sexo = $("#idSexo").val();
+    let dni = $("#idDni").val();
+    let fecha = $("#usr1").val();
+    let celular = $("#idCelular").val();
+    let direccion = $("#idDireccion").val();
+    let codDis = $("#idDistrito").val();
 
+    // Realizar la petición POST para registrar el cliente
+    $.post("/cliente/grabar", {
+        codigo: codigo,
+        nombre: nombre,
+        paterno: paterno,
+        materno: materno,
+        sexo: sexo,
+        dni: dni,
+        fecha: fecha,
+        celular: celular,
+        direccion: direccion,
+        distritoscliente: codDis
+    })
+        .done(function () {
+            // Mostrar alerta de éxito si el registro fue exitoso
+            Swal.fire({
+                icon: 'success',
+                title: 'Cliente ' + nombre + ' registrado correctamente',
+                showConfirmButton: false,
+                timer: 1500
+            });
 
+            // Redireccionar a la página de lista de clientes después de 1.5 segundos
+            setTimeout(function () {
+                window.location.href = "/cliente/lista";
+            }, 1500);
+        })
+        .fail(function () {
+            // Mostrar alerta de error si el registro falló
+            Swal.fire({
+                icon: 'error',
+                title: 'Error en el registro',
+                text: 'No se pudo registrar el cliente',
+                confirmButtonText: 'Cerrar'
+            });
+        })
+        .always(function () {
+            // Habilitar el botón de registro nuevamente
+            $("#Guardar").prop("disabled", false);
+        });
+});
+		
+		 
+	 </script>
+		
 
 	<script>
-		let codigoTipo=-1;
+		let codigoTipo = -1;
 		
-		$('#tableClientes').DataTable();
+		
+			$(document).on("click", ".btn-editar", function () {
+			let cod;
+			//obtener el codigo del medicamento actual según el boton que se presiono
+			cod = $(this).parents("tr").find("td")[0].innerHTML;
+			//trabajar con la funcion get para llmaar a la RUTA "buscar"
+			$.get("/cliente/buscar?codigo=" + cod, function (response) {
+				let sexo = response.sexo;
+				//Imprimir en los controles el valor del JSON
+				$("#idCodigo").val(response.codigo);
+				$("#idNombre").val(response.nombre);
+				$("#idPaterno").val(response.paterno);
+				$("#idMaterno").val(response.materno);
+				$("#idSexo").val(sexo).change();
+				$("#idDni").val(response.dni);
+				$("#usr1").val(response.fecha);
+				$("#idCelular").val(response.celular);
+				$("#idDireccion").val(response.direccion);
+				//$("#idTipo").val(response.tipo.codigo);
+				$("#idProvincia").val(response.distritosCliente.prov.codigo);
+				codigoTipo = response.distritosCliente.codigo;
+				//llamar al evento change del combo idLaboratorio
+				$("#idProvincia").trigger("change")
+				console.log(response);
+			})
+		})
+		
+		
+		
+		$(document).on("click", ".btn-eliminar", function () {
+			let cod;
+			cod = $(this).parents("tr").find("td")[0].innerHTML;
+			console.log(cod);
+			Swal.fire({
+				title: '¿Estás seguro?',
+				text: '¿Deseas eliminar este cliente?',
+				icon: 'warning',
+				showCancelButton: true,
+				confirmButtonText: 'Sí, eliminar',
+				cancelButtonText: 'Cancelar'
+			}).then((result) => {
+				if (result.isConfirmed) {
+					confirmarEliminacion(cod);
+					console.log(cod);
+
+				}
+			});
+		});
+
+		function confirmarEliminacion(codigo) {
+			fetch('/cliente/eliminar/' + codigo, {method: 'DELETE'})
+				.then(response => {
+					if (response.ok) {
+						Swal.fire({
+							title: '¡Cliente eliminado!',
+							text: 'El Cliente ha sido eliminado correctamente.',
+							icon: 'success'
+						}).then(() => {
+							window.location.href = '/cliente/lista';
+						});
+					} else {
+						Swal.fire({
+							title: 'Error',
+							text: 'Error al eliminar el cliente. Por favor, inténtalo nuevamente.',
+							icon: 'error'
+						});
+					}
+				})
+				.catch(error => {
+					Swal.fire({
+						title: 'Error',
+						text: 'Error al eliminar el cliente. Por favor, inténtalo nuevamente.',
+						icon: 'error'
+					});
+					console.error(error);
+				});
+		}
+
+		
+		
+		
+		$('#tableCliente').DataTable();
 		$(function () {
 			$('#usr1').datepicker({
 				'format': 'yyyy-mm-dd',
@@ -266,51 +402,8 @@
 		$('#usr1').on('changeDate show', function (e) {
 			$('#idRegistra').bootstrapValidator('revalidateField', $('#usr1'));
 		});
-
-
-		//Asignar evento click a todos los botones con nombre de clase ".btn-editar"
-		$(document).on("click", ".btn-editar", function () {
-			let cod;
-			//obtener el codigo del medicamento actual según el boton que se presiono
-			cod = $(this).parents("tr").find("td")[0].innerHTML;
-			//trabajar con la funcion get para llmaar a la RUTA "buscar"
-			$.get("/medicamento/buscar?codigo=" + cod, function (response) {
-				//Imprimir en los controles el valor del JSON
-				$("#idCodigo").val(response.codigo);
-				$("#idNombre").val(response.nombre);
-				$("#idDescripcion").val(response.descripcion);
-				$("#idStock").val(response.stock);
-				$("#idPrecio").val(response.precio);
-				$("#usr1").val(response.fecha);
-				//$("#idTipo").val(response.tipo.codigo);
-				$("#idLaboratorio").val(response.tipo.laboratorio.codigo);
-				codigoTipo=response.tipo.codigo;
-				//llamar al evento change del combo idLaboratorio
-				$("#idLaboratorio").trigger("change")
-				console.log(response);
-			})
-		})
-
-
-		//Asignar evento click a todos los botones con nombre de clase ".btm-eliminar"
-		$(document).on("click", ".btn-eliminar", function () {
-			let cod;
-			//obtener el codigo del medicamento actual según el boton que se presiono
-			cod = $(this).parents("tr").find("td")[0].innerHTML;
-			$("#codigo-eliminar").val(cod);
-			alertify.confirm("SISTEMA", "Seguro de eliminar!",
-				function () {//SI
-				$("#form-eliminar").submit();
-				},
-				function () {//NO
-					alertify.error('Cancelado!')
-				}).
-				set('labels', {ok: 'Si', cancel: 'No'}); F
-
-		})
-
-
-		//asignar evento clic al botón con ID btn-cerrar
+		
+		
 		$(document).on("click", "#btn-cerrar", function () {
 			//resetear formulario
 			$("#idRegistra").trigger("reset");
@@ -318,30 +411,31 @@
 			//resetear validaciones
 			$("#idRegistra").data("bootstrapValidator").resetForm(true);
 		})
-
-
+		
+		
+		
 		//asignar evento change al select con ID idLaboratorio
-		$(document).on("change", "#idLaboratorio", function () {
+		$(document).on("change", "#idProvincia", function () {
 			//obtener el código del laboratorio actual
 			let codLab;
-			codLab=$(this).val();
+			codLab = $(this).val();
 			//limpiar combo idTipo
-			$("#idTipo").empty().append("<option value=' '>[Seleccione Tipo Medicamento]</option>");
+			$("#idDistrito").empty().append("<option value=' '>[Seleccione Distrito]</option>");
 			//get
-			$.get("/medicamento/listarTipos?codigo="+codLab,function(response){
+			$.get("/cliente/listarDistritos?codigo=" + codLab, function (response) {
 				//bucle
-				$.each(response,function(index,item){
-					$("#idTipo").append("<option value='"+item.codigo+"'>"+item.nombre+"</option>");		
+				$.each(response, function (index, item) {
+					$("#idDistrito").append("<option value='" + item.codigo + "'>" + item.nombre + "</option>");
 				})
 				//marcar el tipo de medicamento				
-				$("#idTipo").val(codigoTipo);				
+				$("#idDistrito").val(codigoTipo);
 			})
 		})
 
 
-
-
 	</script>
+
+
 
 	<script type="text/javascript">
 		$(document).ready(function () {
@@ -362,38 +456,45 @@
 							}
 						}
 					},
-					Descripcion: {
-						selector: '#idDescripcion',
+					
+					Paterno: {
+						selector: '#idPaterno',
 						validators: {
 							notEmpty: {
-								message: 'Ingrese descripción'
+								message: 'Ingrese apellido paterno'
 							}
 						}
 					},
-					Stock: {
-						selector: '#idStock',
+					Materno: {
+						selector: '#idMaterno',
 						validators: {
 							notEmpty: {
-								message: 'Ingrese stock'
-							},
-							regexp: {
-								regexp: /^[0-9]{1,2}$/,
-								message: 'Campo stock hasta dos cifras'
-							},
+								message: 'Ingrese apellido materno'
+							}
 						}
 					},
-					precio: {
-						selector: '#idPrecio',
+					Sexo: {
+						selector: '#idSexo',
 						validators: {
 							notEmpty: {
-								message: 'Ingrese precio'
-							},
-							regexp: {
-								regexp: /^(\d+|[0-9]+\.\d{1,2})$/,
-								message: 'Campo precio real hasta dos decimales'
-							},
+								message: 'Ingrese sexo'
+							}
 						}
 					},
+					Dni: {
+						selector: '#idDni',
+						validators: {
+							notEmpty: {
+								message: 'Ingrese DNI'
+							},
+							regexp: {
+								regexp: /^\d{1,8}$/,
+								message: 'Ingrese un DNI válido de máximo 8 números'
+							}
+						}
+					},
+					
+					
 					Fecha: {
 						selector: '#usr1',
 						validators: {
@@ -406,11 +507,41 @@
 							},
 						}
 					},
-					Tipo: {
-						selector: '#idTipo',
+					
+					Celular: {
+						selector: '#idCelular',
 						validators: {
 							notEmpty: {
-								message: 'Seleccione tipo medicamento'
+								message: 'Ingrese Celular'
+							},
+							regexp: {
+								regexp: /^\d{1,9}$/,
+								message: 'Ingrese numero de celular de máximo 9 números'
+							}
+						}
+					},
+					Direccion: {
+						selector: '#idDireccion',
+						validators: {
+							notEmpty: {
+								message: 'Ingrese direccion'
+							}
+						}
+					},
+					
+					Provincia: {
+						selector: '#idProvincia',
+						validators: {
+							notEmpty: {
+								message: 'Seleccione una provincia'
+							}
+						}
+					},
+					Distrito: {
+						selector: '#idDistrito',
+						validators: {
+							notEmpty: {
+								message: 'Seleccione distrito'
 							},
 						}
 					}

@@ -1,7 +1,5 @@
 package com.dawiproy.entity;
 
-import java.util.List;
-
 import jakarta.persistence.*;
 
 @Entity

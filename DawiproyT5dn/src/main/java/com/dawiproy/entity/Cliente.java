@@ -27,7 +27,7 @@ public class Cliente {
 	@Column(name = "sex_cli")
 	private String sexo;
 	@Column(name = "dni_cli")
-	private Integer dni;
+	private String dni;
 	@Column(name = "fec_nac_cli")
 	private String fecha;
 	@Column(name = "cel_cli")
@@ -79,16 +79,15 @@ public class Cliente {
 	public void setSexo(String sexo) {
 		this.sexo = sexo;
 	}
+	
 
-	public Integer getDni() {
+	public String getDni() {
 		return dni;
 	}
 
-	public void setDni(Integer dni) {
+	public void setDni(String dni) {
 		this.dni = dni;
 	}
-
-	
 
 	public String getFecha() {
 		return fecha;

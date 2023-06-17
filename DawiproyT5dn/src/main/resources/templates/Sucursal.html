@@ -117,7 +117,7 @@
 										<label for="exampleInputEmail1"><b>Distrito</b></label><br>
 										<i class="fas fa-map-marker-alt form-control-feedback2"></i>
 										<select class="form-control" id="idDistrito" name="distrito">
-											<option value=" ">[Seleccione Distrito]</option>
+											<option value="">[Seleccione Distrito]</option>
 
 											<!--Por lenguaje de expresion traemos los tipos a la vista
 													      hacemos uso de utext para traer los datos al option, tambien con lenguaje de expresion
@@ -147,14 +147,6 @@
 		<!-- Modal FIN-->
 
 
-
-
-		<!-- Modal para eliminar -->
-		<form action="/sucursal/eliminar" method="post" id="form-eliminar">
-			<input type="hidden" name="codigoEliminar" id="codigo-eliminar">
-		</form>
-		<!-- Modal para eliminar FIN-->
-
 	</div>
 	<!-- Contenedor principal FIN-->
 
@@ -164,7 +156,7 @@
 	<!-- Insertando un fragmento para el pie -->
 	<div th:insert="plantilla/UITemplate :: pie"></div>
 
-	
+
 
 	<!--Alert consumible-->
 	<script th:inline="javascript" th:if="${Mensaje!=null}">
@@ -179,7 +171,7 @@
 
 
 	<script>
-		
+
 		$(document).on("click", "#Guardar", function () {
 			// Desactivar el botón de registro
 			$(this).prop("disabled", true);
@@ -225,7 +217,7 @@
 					$("#Guardar").prop("disabled", false);
 				});
 		});
-		
+
 	</script>
 
 
@@ -253,23 +245,57 @@
 		})
 
 
-		//Asignar evento click a todos los botones con nombre de clase ".btm-eliminar"
+
 		$(document).on("click", ".btn-eliminar", function () {
 			let cod;
-			//obtener el codigo del medicamento actual según el boton que se presiono
 			cod = $(this).parents("tr").find("td")[0].innerHTML;
-			$("#codigo-eliminar").val(cod);
 			console.log(cod);
-			alertify.confirm("SISTEMA", "Seguro de eliminar!",
-				function () {//SI
-					$("#form-eliminar").submit();
-				},
-				function () {//NO
-					alertify.error('Cancelado!')
-				}).
-				set('labels', {ok: 'Si', cancel: 'No'}); F
+			Swal.fire({
+				title: '¿Estás seguro?',
+				text: '¿Deseas eliminar esta sucursal?',
+				icon: 'warning',
+				showCancelButton: true,
+				confirmButtonText: 'Sí, eliminar',
+				cancelButtonText: 'Cancelar'
+			}).then((result) => {
+				if (result.isConfirmed) {
+					confirmarEliminacion(cod);
 
-		})
+				}
+			});
+		});
+
+		function confirmarEliminacion(codigo) {
+			fetch('/sucursal/eliminar/' + codigo, {method: 'DELETE'})
+				.then(response => {
+					if (response.ok) {
+						Swal.fire({
+							title: '¡Sucursal eliminada!',
+							text: 'La Sucursal ha sido eliminada correctamente.',
+							icon: 'success'
+						}).then(() => {
+							window.location.href = '/sucursal/lista';
+						});
+					} else {
+						Swal.fire({
+							title: 'Error',
+							text: 'Error al eliminar la sucursal. Por favor, inténtalo nuevamente.',
+							icon: 'error'
+						});
+					}
+				})
+				.catch(error => {
+					Swal.fire({
+						title: 'Error',
+						text: 'Error al eliminar la sucursal. Por favor, inténtalo nuevamente.',
+						icon: 'error'
+					});
+					//controlar error en consola
+					console.error('Error al eliminar la sucursal:', error);
+				});
+		}
+
+
 
 
 		//asignar evento clic al botón con ID btn-cerrar
@@ -288,7 +314,7 @@
 			let codLab;
 			codLab = $(this).val();
 			//limpiar combo idTipo
-			$("#idDistrito").empty().append("<option value=' '>[Seleccione Distrito]</option>");
+			$("#idDistrito").empty().append("<option value=''>[Seleccione Distrito]</option>");
 			//get
 			$.get("/sucursal/listarDistritos?codigo=" + codLab, function (response) {
 				//bucle

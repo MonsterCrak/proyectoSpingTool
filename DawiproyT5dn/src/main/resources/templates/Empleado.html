@@ -54,7 +54,11 @@
 						<!--td th:text="${row.sucursal.nombre}"></td-->
 						<td><a class="btn btn-info btn-editar" data-toggle="modal" data-target="#modalEmpleado">
 								<i class="far fa-edit"></a></td>
-						<td><a class="btn btn-danger btn-eliminar"><i class="far fa-trash-alt"></i></a></td>
+						<td>
+							<a class="btn btn-danger btn-eliminar">
+								<i class="far fa-trash-alt"></i>
+							</a>
+						</td>
 					</tr>
 				</tbody>
 			</table>
@@ -177,9 +181,6 @@
 
 
 
-
-
-
 	</div>
 	<!-- Contenedor principal FIN-->
 
@@ -203,17 +204,183 @@
 	</script>
 
 
+	<script>
+		$(document).on("click", "#Guardar", function () {
+			// Desactivar el botón de registro
+			$(this).prop("disabled", true);
+
+			// Obtener los valores de los campos de entrada
+			let codigo = $("#idCodigo").val();
+			let nombre = $("#idNombre").val();
+			let apellido = $("#idApellido").val();
+			let nacimiento = $("#usr1").val();
+			let puesto = $("#idPuesto").val();
+			let salario = $("#idSalario").val();
+			let sucursal = $("#idSucursal").val();
+
+
+			// Realizar la petición POST para registrar la sucursal
+			$.post("/empleado/registrar", {
+				codigo: codigo,
+				nombre: nombre,
+				apellido: apellido,
+				nacimiento: nacimiento,
+				puesto: puesto,
+				salario: salario,
+				sucursal: sucursal
+			})
+				.done(function () {
+					// Mostrar alerta de éxito si el registro fue exitoso
+					Swal.fire({
+						icon: 'success',
+						title: 'Empleado ' + nombre + ' grabado correctamente',
+						showConfirmButton: false,
+						timer: 1500
+					});
+
+					// Redireccionar a la página de lista de sucursales después de 1.5 segundos
+					setTimeout(function () {
+						window.location.href = "/empleado/lista";
+					}, 1500);
+				})
+				.fail(function () {
+					// Mostrar alerta de error si el registro falló
+					Swal.fire({
+						icon: 'error',
+						title: 'Error en el registro',
+						text: 'No se pudo registrar el empleado',
+						confirmButtonText: 'Cerrar'
+					});
+				})
+				.always(function () {
+					// Habilitar el botón de registro nuevamente
+					$("#Guardar").prop("disabled", false);
+				});
+		});
+
+
+	</script>
 
 
 
-	<script th:src="@{/js/Empleado.js}">
+	<script>
+		let codigoTipo = -1;
+
+		$("#btn-nuevo").on("click", function () {
+			$("#idCodigo").prop("readonly", false);
+		});
+
+		//Asignar evento click a todos los botones con nombre de clase ".btn-editar"
+		$(document).on("click", ".btn-editar", function () {
+			let cod;
+			//obtener el codigo del medicamento actual según el boton que se presiono
+			cod = $(this).parents("tr").find("td")[0].innerHTML;
+			//trabajar con la funcion get para llmaar a la RUTA "buscar"
+			$.get("/empleado/buscar?codigo=" + cod, function (response) {
+				let puesto = response.puesto;
+				//Imprimir en los controles el valor del JSON
+				$("#idCodigo").val(response.codigo).prop("readonly", true);
+				$("#idNombre").val(response.nombre);
+				$("#idApellido").val(response.apellido);
+				$("#usr1").val(response.fecha_nacimiento);
+
+				$("#idPuesto").val(puesto).change();
+
+				$("#idSalario").val(response.salario);
+				$("#idSucursal").val(response.sucursal.codigo);
+				//llamar al evento change del combo idSucursal
+				$("#idSucursal").trigger("change")
+				console.log(response);
+			})
+		})
+
+
+
+
+
+
+		//asignar evento clic al botón con ID btn-cerrar
+		$(document).on("click", "#btn-cerrar", function () {
+			//resetear formulario
+			$("#idRegistra").trigger("reset");
+			$("#idCodigo").val();
+			//resetear validaciones
+			$("#idRegistra").data("bootstrapValidator").resetForm(true);
+		})
+
+
+
+		//
+
+		//function obtenerCodigo(codigo) {
+		//	if (confirm('¿Estás seguro de que deseas eliminar este empleado?')) {
+		//		cod = $(this).parents("tr").find("td")[0].innerHTML;
+		//		confirmarEliminacion(cod);
+		//		console.log(cod);
+		//	}
+		//}
+
+		//asignar evento clic al botón con ID btn-cerrar
+		$(document).on("click", ".btn-eliminar", function () {
+			let cod;
+			cod = $(this).parents("tr").find("td")[0].innerHTML;
+
+			Swal.fire({
+				title: '¿Estás seguro?',
+				text: '¿Deseas eliminar este empleado?',
+				icon: 'warning',
+				showCancelButton: true,
+				confirmButtonText: 'Sí, eliminar',
+				cancelButtonText: 'Cancelar'
+			}).then((result) => {
+				if (result.isConfirmed) {
+					confirmarEliminacion(cod);
+				}
+			});
+		});
+
+		function confirmarEliminacion(codigo) {
+			fetch('/empleado/eliminar/' + codigo, {method: 'DELETE'})
+				.then(response => {
+					if (response.ok) {
+						Swal.fire({
+							title: '¡Empleado eliminado!',
+							text: 'El empleado ha sido eliminado correctamente.',
+							icon: 'success'
+						}).then(() => {
+							window.location.href = '/empleado/lista';
+						});
+					} else {
+						Swal.fire({
+							title: 'Error',
+							text: 'Error al eliminar el empleado. Por favor, inténtalo nuevamente.',
+							icon: 'error'
+						});
+					}
+				})
+				.catch(error => {
+					Swal.fire({
+						title: 'Error',
+						text: 'Error al eliminar el empleado. Por favor, inténtalo nuevamente.',
+						icon: 'error'
+					});
+					console.error(error);
+				});
+		}
+
+
 
 
 
 	</script>
 
+
 	<script>
-		$('#tableEmpleados').DataTable();
+		$('#tableEmpleados').DataTable({
+			language: {
+				search: "Buscar:"
+			}
+		});
 		$(function () {
 			$('#usr1').datepicker({
 				'format': 'yyyy-mm-dd',

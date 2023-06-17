@@ -8,32 +8,29 @@ import org.springframework.stereotype.Service;
 import com.dawiproy.entity.Empleado;
 import com.dawiproy.repository.Empleadorepository;
 
+import jakarta.transaction.Transactional;
+
 @Service
 public class Empleadoservices {
 
 	@Autowired
 	private Empleadorepository repo;
-	
-	public void registrar(Empleado bean) {
+
+	public void grabar(Empleado bean) {
 		repo.save(bean);
 	}
-	
-	public void actualizar(Empleado bean) {
-        repo.save(bean);
-    }
-	
+
 	public Empleado buscarPorId(String cod) {
-	    return repo.findByCodigoEmpleado(cod);
+		return repo.findByCodigoEmpleado(cod);
 	}
 
-	
-	public void eliminarPorID(String cod) {
-        repo.deleteByCodigoEmpleado(cod);
-    }
-	
-	
-	public List<Empleado> listarTodos(){
+	@Transactional
+	public void eliminarPorID(String codigo) {
+		repo.deleteByCodigoEmpleado(codigo);
+	}
+
+	public List<Empleado> listarTodos() {
 		return repo.findAll();
 	}
-	
+
 }

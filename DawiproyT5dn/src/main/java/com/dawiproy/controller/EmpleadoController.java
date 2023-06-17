@@ -5,18 +5,20 @@ package com.dawiproy.controller;
 import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.servlet.view.RedirectView;
 
 import com.dawiproy.entity.Empleado;
 import com.dawiproy.entity.Sucursal;
 import com.dawiproy.services.Empleadoservices;
-import com.dawiproy.services.Productoservices;
 import com.dawiproy.services.Sucursalservices;
 import com.dawiproy.services.Usuarioservices;
 
@@ -68,12 +70,9 @@ public class EmpleadoController {
             s.setCodigo(codSucu);
             e.setSucursal(s);
 
-            serEmpleado.registrar(e);
+            serEmpleado.grabar(e);
 
-            // Enviar atributo
-            redirect.addFlashAttribute("Mensaje", "Empleado registrado");
         } catch (Exception e) {
-            redirect.addFlashAttribute("Mensaje", "Error en el registro");
             e.printStackTrace();
         }
 
@@ -82,47 +81,6 @@ public class EmpleadoController {
     
 	
 	
-	@RequestMapping(value = "/actualizar", method = RequestMethod.POST)
-	public String actualizar(
-	        @RequestParam("codigo") String cod,
-	        @RequestParam("nombre") String nom,
-	        @RequestParam("apellido") String ape,
-	        @RequestParam("nacimiento") String nac,
-	        @RequestParam("puesto") String pue,
-	        @RequestParam("salario") double sal,
-	        @RequestParam("sucursal") Integer codSucu,
-	        RedirectAttributes redirect) {
-
-	    try {
-	        // Buscar el empleado existente por su código
-	        Empleado empleadoExistente = serEmpleado.buscarPorId(cod);
-
-	        if (empleadoExistente != null) {
-	            // Si el empleado existe, actualiza sus datos
-	            empleadoExistente.setNombre(nom);
-	            empleadoExistente.setApellido(ape);
-	            empleadoExistente.setFecha_nacimiento(nac);
-	            empleadoExistente.setPuesto(pue);
-	            empleadoExistente.setSalario(sal);
-
-	            // Buscar la sucursal existente por su código
-	            Sucursal sucursalExistente = serSucursal.buscarPorId(codSucu);
-	            empleadoExistente.setSucursal(sucursalExistente);
-
-	            serEmpleado.registrar(empleadoExistente);
-
-	            redirect.addFlashAttribute("Mensaje", "Empleado actualizado");
-	        } else {
-	            // Si el empleado no existe, se puede mostrar un mensaje de error o redirigir a otra página
-	            redirect.addFlashAttribute("Mensaje", "El empleado no existe");
-	        }
-	    } catch (Exception e) {
-	        redirect.addFlashAttribute("Mensaje", "Error en la actualización");
-	        e.printStackTrace();
-	    }
-
-	    return "redirect:/empleado/lista";
-	}
 
 	
 	@RequestMapping("/buscar")
@@ -145,6 +103,21 @@ public class EmpleadoController {
 	
 	
 
+
+	//@RequestMapping("/eliminar")
+	//public String eliminarPorCodigo(@RequestParam("codigoEliminar") String cod) {
+	//    serEmpleado.eliminarPorID(cod);
+	//    return "redirect:/empleado/lista";
+	//}
+
+	@RequestMapping(value = "/eliminar/{codigo}", method = RequestMethod.DELETE)
+	public ResponseEntity<String> eliminarEmpleado(@PathVariable("codigo") String codigo) {
+	    serEmpleado.eliminarPorID(codigo);
+	    return ResponseEntity.ok("Empleado eliminado correctamente");
+	}
+
+
+	
 	
 	
 }

@@ -278,7 +278,7 @@
             // Mostrar alerta de éxito si el registro fue exitoso
             Swal.fire({
                 icon: 'success',
-                title: 'Cliente ' + nombre + ' registrado correctamente',
+                title: 'Cliente ' + nombre + ' grabado correctamente',
                 showConfirmButton: false,
                 timer: 1500
             });
@@ -292,8 +292,8 @@
             // Mostrar alerta de error si el registro falló
             Swal.fire({
                 icon: 'error',
-                title: 'Error en el registro',
-                text: 'No se pudo registrar el cliente',
+                title: 'Error al grabar',
+                text: 'No se pudo grabar el cliente',
                 confirmButtonText: 'Cerrar'
             });
         })
@@ -438,6 +438,13 @@
 
 
 	<script type="text/javascript">
+		$('#tableClientes').DataTable({
+			language: {
+				search: "Buscar:"
+				
+			}
+		});
+		
 		$(document).ready(function () {
 
 			$('#idRegistra').bootstrapValidator({

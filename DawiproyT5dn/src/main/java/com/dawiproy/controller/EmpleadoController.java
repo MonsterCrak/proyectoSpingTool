@@ -1,10 +1,9 @@
 package com.dawiproy.controller;
 
-
-
 import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -28,99 +27,78 @@ public class EmpleadoController {
 
 	@Autowired
 	private Empleadoservices serEmpleado;
-	
+
 	@Autowired
 	private Sucursalservices serSucursal;
-	
+
 	@Autowired
 	private Usuarioservices serUsuario;
-	
-	
+
 	@RequestMapping("/lista")
 	private String lista(Model model) {
 		model.addAttribute("empleados", serEmpleado.listarTodos());
 		model.addAttribute("sucursales", serSucursal.listarTodos());
 		return "Empleado";
 	}
-	
-	
+
 	@RequestMapping(value = "/registrar", method = RequestMethod.POST)
-    public String registrar(
-            @RequestParam("codigo") String cod,
-            @RequestParam("nombre") String nom,
-            @RequestParam("apellido") String ape,
-            @RequestParam("nacimiento") String nac,
-            @RequestParam("puesto") String pue,
-            @RequestParam("salario") double sal,
-            @RequestParam("sucursal") Integer codSucu,
-            RedirectAttributes redirect) {
+	public String registrar(@RequestParam("codigo") String cod, @RequestParam("nombre") String nom,
+			@RequestParam("apellido") String ape, @RequestParam("nacimiento") String nac,
+			@RequestParam("puesto") String pue, @RequestParam("salario") double sal,
+			@RequestParam("sucursal") Integer codSucu, RedirectAttributes redirect) {
 
-        try {
-            // Crear objeto de la entidad Empleado
-            Empleado e = new Empleado();
-            e.setCodigo(cod);
-            e.setNombre(nom);
-            e.setApellido(ape);
-            e.setFecha_nacimiento(nac);
-            e.setPuesto(pue);
-            e.setSalario(sal);
+		try {
+			// Crear objeto de la entidad Empleado
+			Empleado e = new Empleado();
+			e.setCodigo(cod);
+			e.setNombre(nom);
+			e.setApellido(ape);
+			e.setFecha_nacimiento(nac);
+			e.setPuesto(pue);
+			e.setSalario(sal);
 
-            // Crear objeto de la entidad Sucursal
-            Sucursal s = new Sucursal();
-            s.setCodigo(codSucu);
-            e.setSucursal(s);
+			// Crear objeto de la entidad Sucursal
+			Sucursal s = new Sucursal();
+			s.setCodigo(codSucu);
+			e.setSucursal(s);
 
-            serEmpleado.grabar(e);
+			serEmpleado.grabar(e);
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
-        return "redirect:/empleado/lista";
-    }
-    
-	
-	
+		return "redirect:/empleado/lista";
+	}
 
-	
 	@RequestMapping("/buscar")
-	@ResponseBody //Anotación para devolver un JSON en objeto
+	@ResponseBody // Anotación para devolver un JSON en objeto
 	public Empleado buscarPorCodigo(@RequestParam("codigo") String cod) {
 		return serEmpleado.buscarPorId(cod);
 	}
-		
+
 	@RequestMapping(value = "/eliminar", method = RequestMethod.POST)
 	public String eliminarPorCodigo(@RequestParam("codigoEliminar") String cod, RedirectAttributes redirect) {
-	    Empleado empleado = serEmpleado.buscarPorId(cod);
-	    if (empleado != null) {
-	        serEmpleado.eliminarPorID(cod);
-	        redirect.addFlashAttribute("Mensaje", "Empleado eliminado");
-	    } else {
-	        redirect.addFlashAttribute("Mensaje", "No se encontró el empleado");
-	    }
-	    return "redirect:/empleado/lista";
+		Empleado empleado = serEmpleado.buscarPorId(cod);
+		if (empleado != null) {
+			serEmpleado.eliminarPorID(cod);
+			redirect.addFlashAttribute("Mensaje", "Empleado eliminado");
+		} else {
+			redirect.addFlashAttribute("Mensaje", "No se encontró el empleado");
+		}
+		return "redirect:/empleado/lista";
 	}
-	
-	
-
-
-	//@RequestMapping("/eliminar")
-	//public String eliminarPorCodigo(@RequestParam("codigoEliminar") String cod) {
-	//    serEmpleado.eliminarPorID(cod);
-	//    return "redirect:/empleado/lista";
-	//}
 
 	@RequestMapping(value = "/eliminar/{codigo}", method = RequestMethod.DELETE)
 	public ResponseEntity<String> eliminarEmpleado(@PathVariable("codigo") String codigo) {
-	    serEmpleado.eliminarPorID(codigo);
-	    return ResponseEntity.ok("Empleado eliminado correctamente");
+		try {
+			serEmpleado.eliminarPorID(codigo);
+			return ResponseEntity.ok("Empleado eliminado correctamente");
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body("Error al eliminar el empleado. Por favor, inténtalo nuevamente.");
+		}
+
 	}
 
-
-	
-	
-	
 }
-
-
-

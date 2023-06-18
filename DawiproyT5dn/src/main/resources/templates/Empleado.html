@@ -247,8 +247,8 @@
 					// Mostrar alerta de error si el registro falló
 					Swal.fire({
 						icon: 'error',
-						title: 'Error en el registro',
-						text: 'No se pudo registrar el empleado',
+						title: 'Error al grabar',
+						text: 'No se pudo grabar el empleado',
 						confirmButtonText: 'Cerrar'
 					});
 				})
@@ -308,17 +308,6 @@
 			$("#idRegistra").data("bootstrapValidator").resetForm(true);
 		})
 
-
-
-		//
-
-		//function obtenerCodigo(codigo) {
-		//	if (confirm('¿Estás seguro de que deseas eliminar este empleado?')) {
-		//		cod = $(this).parents("tr").find("td")[0].innerHTML;
-		//		confirmarEliminacion(cod);
-		//		console.log(cod);
-		//	}
-		//}
 
 		//asignar evento clic al botón con ID btn-cerrar
 		$(document).on("click", ".btn-eliminar", function () {

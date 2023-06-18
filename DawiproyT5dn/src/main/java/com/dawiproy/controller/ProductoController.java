@@ -1,6 +1,7 @@
 package com.dawiproy.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -73,10 +74,18 @@ public class ProductoController {
 		
 	@RequestMapping(value = "/eliminar/{codigo}", method = RequestMethod.DELETE)
 	public ResponseEntity<String> eliminarProducto(@PathVariable("codigo") Integer codigo) {
-	    serProducto.eliminarPorID(codigo);
-	    return ResponseEntity.ok("Producto eliminado correctamente");
+		try {
+			serProducto.eliminarPorID(codigo);
+		    return ResponseEntity.ok("Producto eliminado correctamente");
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+		            .body("Error al eliminar el producto. Por favor, inténtalo nuevamente.");
+		}
+		
+		
 	}
 
+	
 }
 
 

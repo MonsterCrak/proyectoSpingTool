@@ -178,7 +178,7 @@
 					// Mostrar alerta de éxito si el registro fue exitoso
 					Swal.fire({
 						icon: 'success',
-						title: 'Producto ' + nombre + ' registrado correctamente',
+						title: 'Producto ' + nombre + ' grabado correctamente',
 						showConfirmButton: false,
 						timer: 1500
 					});
@@ -192,8 +192,8 @@
 					// Mostrar alerta de error si el registro falló
 					Swal.fire({
 						icon: 'error',
-						title: 'Error en el registro',
-						text: 'No se pudo registrar el producto',
+						title: 'Error al grabar',
+						text: 'No se pudo grabar el producto',
 						confirmButtonText: 'Cerrar'
 					});
 				})
@@ -210,7 +210,12 @@
 	<script>
 		let codigoTipo = -1;
 
-		$('#tableMedicamentos').DataTable();
+		$('#tableProductos').DataTable({
+			language: {
+				search: "Buscar:"
+			}
+		});
+		
 		$(function () {
 			$('#usr1').datepicker({
 				'format': 'yyyy-mm-dd',

@@ -193,7 +193,7 @@
 					// Mostrar alerta de éxito si el registro fue exitoso
 					Swal.fire({
 						icon: 'success',
-						title: 'Sucursal ' + nombre + ' registrado correctamente',
+						title: 'Sucursal ' + nombre + ' grabada correctamente',
 						showConfirmButton: false,
 						timer: 1500
 					});
@@ -207,8 +207,8 @@
 					// Mostrar alerta de error si el registro falló
 					Swal.fire({
 						icon: 'error',
-						title: 'Error en el registro',
-						text: 'No se pudo registrar la sucursal',
+						title: 'Error al grabar',
+						text: 'No se pudo grabar la sucursal',
 						confirmButtonText: 'Cerrar'
 					});
 				})
@@ -332,6 +332,12 @@
 	</script>
 
 	<script type="text/javascript">
+		$('#tableSucursales').DataTable({
+			language: {
+				search: "Buscar:"
+			}
+		});
+		
 		$(document).ready(function () {
 
 			$('#idRegistra').bootstrapValidator({

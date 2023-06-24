@@ -1,0 +1,15 @@
+package com.dawiproy.repository;
+
+import java.util.List;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+
+import com.dawiproy.entity.Producto;
+
+public interface Productorepository extends JpaRepository<Producto, Integer> {
+		
+	@Query("SELECT p FROM Producto p WHERE p.nombre LIKE %:nombre%")
+    List<Producto> buscarProductosPorNombre(@Param("nombre") String nombre);
+
+}

@@ -18,6 +18,7 @@ import com.dawiproy.security.Security;
 
 
 
+
 //archivo de configuración
 @Configuration
 //habilitar seguridad
@@ -25,7 +26,7 @@ import com.dawiproy.security.Security;
 //habilitar método para validar clave
 @EnableMethodSecurity
 public class SecurityConfig{
-	
+
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		http.csrf().disable().authorizeHttpRequests().

@@ -1,0 +1,24 @@
+package com.dawiproy.services;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.dawiproy.entity.Empleado;
+import com.dawiproy.repository.Boletarepository;
+import com.dawiproy.repository.Empleadorepository;
+
+@Service
+public class Boletaservices {
+
+	@Autowired
+	private Boletarepository serBoleta;
+
+	@Autowired
+	private Empleadorepository serEmpleado;
+
+	
+	public Empleado listarDatosEmpleado(Integer codigoUsuario) {
+		return serEmpleado.listarDatosEmpleado(codigoUsuario);
+	}
+
+}

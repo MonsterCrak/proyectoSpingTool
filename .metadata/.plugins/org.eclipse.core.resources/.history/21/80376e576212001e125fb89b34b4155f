@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:insert="plantilla/UITemplate :: cabecera">
+	<meta charset="ISO-8859-1">
+	<title>Intranet</title>
+	<style>
+		container {
+    display: flex;
+    height: 100vh; /* Establece la altura del contenedor al 100% de la altura de la ventana */
+    flex-direction: column; /* Coloca los elementos en una disposición vertical */
+  }
+  
+  .element {
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .element-1 {
+    background-color: blue;
+    color: white;
+  }
+  
+  .element-2 {
+    background-color: red;
+    color: white;
+  }
+	</style>
+</head>
+
+
+<body>
+	<!-- consumir fragmento cabecera-->
+
+
+	<div>
+		<div class="element element-1">
+			<div th:insert="plantilla/UITemplate :: menu"></div>
+
+		</div>
+		<div class="element element-2" style="background-color: red;">
+			Contenido del elemento 2
+		</div>
+	</div>
+
+
+
+	<div th:insert="plantilla/UITemplate :: pie"></div>
+</body>
+
+</html>

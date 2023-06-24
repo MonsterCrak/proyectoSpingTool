@@ -1,0 +1,16 @@
+package com.dawiproy.services;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.dawiproy.repository.Boletarepository;
+
+@Service
+public class Boletaservices {
+
+	@Autowired
+	private Boletarepository serBoleta;
+	
+	
+	
+}

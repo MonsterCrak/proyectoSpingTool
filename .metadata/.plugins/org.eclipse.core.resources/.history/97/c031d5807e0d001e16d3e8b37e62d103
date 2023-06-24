@@ -1,0 +1,36 @@
+package com.dawiproy.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import com.dawiproy.services.Boletaservices;
+import com.dawiproy.services.Clienteservices;
+import com.dawiproy.services.Empleadoservices;
+import com.dawiproy.services.Productoservices;
+
+@Controller
+@RequestMapping("/boleta")
+public class BoletaController {
+	
+	@Autowired
+	private Clienteservices serCliente;
+	
+	@Autowired
+	private Productoservices serProducto;
+	
+	@Autowired
+	private Empleadoservices serEmpleado;
+	
+	@Autowired
+	private Boletaservices serBoleta;
+	
+	@RequestMapping("/lista")
+	public String lista(Model model) {
+		model.addAttribute("clientes", serCliente.listarTodos());
+		model.addAttribute("empleados", serBoleta.listarDatosEmpleado(null));
+		return "boleta";
+	}
+
+}

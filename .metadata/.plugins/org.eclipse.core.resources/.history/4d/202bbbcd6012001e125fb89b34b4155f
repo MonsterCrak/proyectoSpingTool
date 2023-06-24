@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:insert="plantilla/UITemplate :: cabecera">
+<meta charset="ISO-8859-1">
+<title>Intranet</title>
+
+</head>
+<body>
+	<!-- consumir fragmento cabecera-->
+	<div th:insert="plantilla/UITemplate :: menu"></div>	
+
+
+
+	
+
+	<div th:insert="plantilla/UITemplate :: pie"></div>
+</body>
+</html>
+

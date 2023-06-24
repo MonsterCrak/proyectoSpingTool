@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section name="Workbench">
+	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
+		<item key="selection" value="--main-bg"/>
+		<item key="wrap" value="false"/>
+		<item key="casesensitive" value="false"/>
+		<item key="wholeword" value="false"/>
+		<item key="incremental" value="false"/>
+		<item key="isRegEx" value="false"/>
+		<list key="findhistory">
+			<item value="--main-bg"/>
+			<item value="boostrap demo"/>
+			<item value="producto"/>
+			<item value="medicamento"/>
+			<item value="btn-datos-medicamento"/>
+			<item value="listaMedicamentoJSON"/>
+			<item value="txtCliente"/>
+			<item value="btn-buscar-cliente"/>
+			<item value="cod_med"/>
+			<item value="numeroBoleta"/>
+			<item value="codigoMedicamento"/>
+			<item value="codigoProducto"/>
+			<item value="datata"/>
+			<item value="datatable"/>
+			<item value="data"/>
+		</list>
+		<list key="replacehistory">
+			<item value="id_producto"/>
+			<item value="codigoProducto"/>
+		</list>
+	</section>
+	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">
+		<item key="DIALOG_X_ORIGIN" value="1579"/>
+		<item key="DIALOG_Y_ORIGIN" value="649"/>
+		<item key="DIALOG_WIDTH" value="322"/>
+		<item key="DIALOG_HEIGHT" value="391"/>
+		<item key="DIALOG_FONT_NAME" value="1|Segoe UI|9.0|0|WINDOWS|1|-12|0|0|0|400|0|0|0|1|0|0|0|0|Segoe UI"/>
+	</section>
+</section>

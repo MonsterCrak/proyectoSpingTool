@@ -1,0 +1,55 @@
+package com.dawiproy.services;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.dawiproy.entity.Boleta;
+import com.dawiproy.entity.Empleado;
+import com.dawiproy.entity.Producto;
+import com.dawiproy.repository.Boletarepository;
+import com.dawiproy.repository.Empleadorepository;
+import com.dawiproy.repository.ProductoHasBoletaRepositorio;
+import com.dawiproy.repository.Productorepository;
+
+import jakarta.transaction.Transactional;
+
+@Service
+public class Boletaservices {
+
+	@Autowired
+	private Boletarepository serBoleta;
+
+	@Autowired
+	private ProductoHasBoletaRepositorio serPrdHasBoleta;
+	
+	
+	//anotación de spring
+		@Transactional
+		public void registrar(Boleta bean) {
+			try {
+				//Grabar boleta "Cabecera---> tb_boleta
+				serBoleta.save(bean);
+				//grabar MedicamentoHasBoleta "Detalle---> "tb_medicamento_has_boleta"
+				//bucle para realizar recorrido sobre el atributo listaMedicamentoHasBoleta del objeto "bean"
+				for(MedicamentoHasBoleta mhb:bean.getListaMedicamentoHasBoleta()) {
+					//llave
+					MedicamentoHasBoletaPK pk = new MedicamentoHasBoletaPK();
+					//setear
+					pk.setCodigoMedicamento(mhb.getMedicamento().getCodigo());
+					pk.setNumeroBoleta(bean.getNumeroBoleta());
+					//enviar pk al objeto mhb
+					mhb.setPk(pk);
+					//grabar mhb
+					servicioDet.save(mhb);
+				}
+				
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			
+		}
+	
+
+}

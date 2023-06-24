@@ -1,0 +1,37 @@
+package com.dawiproy.services;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.dawiproy.entity.Empleado;
+import com.dawiproy.entity.Producto;
+import com.dawiproy.repository.Boletarepository;
+import com.dawiproy.repository.Empleadorepository;
+import com.dawiproy.repository.ProductoHasBoletaRepositorio;
+import com.dawiproy.repository.Productorepository;
+
+@Service
+public class Boletaservices {
+
+	@Autowired
+	private Boletarepository serBoleta;
+
+	@Autowired
+	private ProductoHasBoletaRepositorio serPrdHasBoleta;
+	
+	@Autowired
+	private Productorepository serProducto;
+
+	
+	public Empleado listarDatosEmpleado(Integer codigoUsuario) {
+		return serEmpleado.listarDatosEmpleado(codigoUsuario);
+	}
+	
+	
+	public List<Producto> buscarProductosPorNombre(String nombre) {
+        return serProducto.buscarProductosPorNombre(nombre);
+    }
+
+}

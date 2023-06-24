@@ -1,0 +1,51 @@
+package com.dawiproy.services;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.dawiproy.entity.Empleado;
+import com.dawiproy.repository.Empleadorepository;
+
+import jakarta.transaction.Transactional;
+
+@Service
+public class Empleadoservices {
+
+	@Autowired
+	private Empleadorepository repo;
+
+	public void grabar(Empleado bean) {
+		repo.save(bean);
+	}
+
+	public Empleado buscarPorId(String cod) {
+		return repo.findByCodigoEmpleado(cod);
+	}
+
+	@Transactional
+	public void eliminarPorID(String codigo) {
+		repo.deleteByCodigoEmpleado(codigo);
+	}
+
+	public List<Empleado> listarTodos() {
+		return repo.findAll();
+	}
+	
+	
+	public void obtenerDatosEmpleadoPorCodigoUsuario(int codigoUsuario) {
+        Object[] empleadoData = repo.findEmpleadoDataByCodigoUsuario(codigoUsuario);
+
+        if (empleadoData != null && empleadoData.length == 3) {
+            String nombre = (String) empleadoData[0];
+            String apellido = (String) empleadoData[1];
+            String login = (String) empleadoData[2];
+
+            // Realiza las operaciones necesarias con los datos del empleado...
+        } else {
+            // Maneja el caso cuando no se encuentran datos del empleado para el código de usuario dado.
+        }
+    }
+
+}

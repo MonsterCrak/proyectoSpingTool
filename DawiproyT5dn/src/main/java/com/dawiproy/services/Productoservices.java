@@ -32,4 +32,10 @@ public class Productoservices {
 	public List<Producto> listarTodos() {
 		return repo.findAll();
 	}
+	
+	public List<Producto> buscarProductosPorNombre(String nombre) {
+        return repo.buscarProductosPorNombre(nombre);
+    }
+	
+	
 }

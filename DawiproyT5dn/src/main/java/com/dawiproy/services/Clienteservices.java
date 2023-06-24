@@ -32,4 +32,8 @@ public class Clienteservices {
 	public List<Cliente> listarTodos(){
 		return repo.findAll();
 	}
+	
+	public List<Cliente> listaClientes(String ape){
+		return repo.findByPaternoStartingWith(ape);
+	}
 }

@@ -1,0 +1,55 @@
+package com.dawiproy.services;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.dawiproy.entity.Empleado;
+import com.dawiproy.repository.Empleadorepository;
+
+import jakarta.transaction.Transactional;
+
+@Service
+public class Empleadoservices {
+
+	@Autowired
+	private Empleadorepository repo;
+
+	public void grabar(Empleado bean) {
+		repo.save(bean);
+	}
+
+	public Empleado buscarPorId(String cod) {
+		return repo.findByCodigoEmpleado(cod);
+	}
+
+	@Transactional
+	public void eliminarPorID(String codigo) {
+		repo.deleteByCodigoEmpleado(codigo);
+	}
+
+	public List<Empleado> listarTodos() {
+		return repo.findAll();
+	}
+	
+	
+	 public Empleado obtenerDatosEmpleadoPorCodigoUsuario(int codigoUsuario) {
+	        Object[] empleadoData = repo.findEmpleadoDataByCodigoUsuario(codigoUsuario);
+
+	        if (empleadoData != null && empleadoData.length == 3) {
+	            String nombre = (String) empleadoData[0];
+	            String apellido = (String) empleadoData[1];
+	            String login = (String) empleadoData[2];
+
+	            // Crear un objeto EmpleadoDTO con los datos obtenidos
+	            Empleado e = new Empleado(nombre, apellido, login);
+
+	            return empleadoDTO;
+	        } else {
+	            // Retornar un objeto EmpleadoDTO vacío con el mensaje "Sin loguear"
+	            return new EmpleadoDTO("Sin", "loguear", "");
+	        }
+	    }
+
+}

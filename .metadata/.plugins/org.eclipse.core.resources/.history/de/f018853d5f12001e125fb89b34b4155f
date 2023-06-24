@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:insert="plantilla/UITemplate :: cabecera">
+	<meta charset="ISO-8859-1">
+	<title>Producto</title>
+
+</head>
+
+<body>
+	<!-- Insertando un fragmento para el menu -->
+	<div th:insert="plantilla/UITemplate :: menu"></div>
+
+	<!-- Contenedor principal INICIO-->
+	<div class="container">
+
+
+		<!-- Titulo-->
+		<h3 class="text-center mt-4">LISTA DE PRODUCTOS</h3>
+
+
+		<!-- Boton nuevo INICIO-->
+		<button type="button" class="btn btn-primary mt-5" data-toggle="modal" data-target="#modalProducto"
+			id="btn-nuevo">
+			<i class="far fa-file"></i> Nuevo Producto
+		</button>
+		<!-- Boton nuevo FIN-->
+
+		<!-- tabla INICIO-->
+		<div class=" mt-2">
+
+			<table class="table table-striped table-bordered mt-5" id="tableProductos">
+				<thead>
+					<tr>
+						<th>Código</th>
+						<th>Nombre</th>
+						<th>Precio</th>
+						<th>Categoría</th>
+						<th></th>
+						<th></th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="row:${producto}">
+						<td th:text="${row.codigo}"></td>
+						<td th:text="${row.nombre}"></td>
+						<td th:text="${row.precio}"></td>
+						<td th:text="${row.categoria.nombre}"></td>
+						<td><a class="btn btn-info btn-editar" data-toggle="modal" data-target="#modalProducto"><i
+									class="far fa-edit"></i></a></td>
+						<td><a class="btn btn-danger btn-eliminar"><i class="far fa-trash-alt"></i></a></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+
+		<!-- tabla FIN-->
+
+
+
+
+
+		<!-- Modal INICIO-->
+		<!-- Modificar id-->
+		<div class="modal fade" id="modalProducto" data-backdrop="static" data-keyboard="false" tabindex="-1"
+			aria-labelledby="exampleModalLabel" aria-hidden="true">
+			<div class="modal-dialog modal-dialog-centered modal-login modal-lg">
+				<div class="modal-content">
+					<div class="modal-header bg-blue-darker">
+						<h4 class="modal-title text-white">Producto</h4>
+					</div>
+					<div class="modal-body">
+						<!-- Modificar form, action-->
+						<form method="POST" id="idRegistra" action="/producto/grabar">
+							<input type="hidden" id="idCodigo" name="codigo" value="0">
+							<div class="container">
+								<div class="row">
+
+									<!-- Input INICIO -->
+									<div class="form-group has-feedback col-md-12">
+										<label for="exampleInputEmail1"><b>Nombre</b></label><br>
+										<i class="fas fa-file-signature form-control-feedback2"></i>
+										<input type="text" class="form-control" id="idNombre"
+											placeholder="Ingresar nombre" name="nombre">
+									</div>
+									<!-- Input FIN -->
+									<!-- Input INICIO -->
+									<div class="form-group has-feedback col-md-6">
+										<label for="exampleInputEmail1"><b>Precio</b></label><br>
+										<i class="fas fa-money-check-alt form-control-feedback2"></i>
+										<input type="text" class="form-control" id="idPrecio"
+											placeholder="Ingresar precio" name="precio">
+									</div>
+									<!-- Input FIN -->
+									<!-- Select INICIO -->
+									<div class="form-group has-feedback col-md-6">
+										<label for="exampleInputEmail1"><b>Categoría</b></label><br>
+										<i class="fas fa-prescription-bottle-alt form-control-feedback2"></i>
+										<select class="form-control" id="idCategoria" name="categoria">
+											<option value=" ">[Seleccione Categoría]</option>
+
+											<!--Por lenguaje de expresion traemos los tipos a la vista
+													      hacemos uso de utext para traer los datos al option, tambien con lenguaje de expresion
+													      tambien se le da el value para obtener el codigo de la seleccion en el combobox-->
+											<option th:each="fila:${categorias}" th:utext="${fila.nombre}"
+												th:value="${fila.codigo}" />
+										</select>
+									</div>
+									<!-- Select FIN -->
+								</div>
+							</div>
+
+							<!-- BOTONES INICIO -->
+							<div class="col-md-12 text-center mt-4">
+								<button type="submit" id="Guardar" class="btn btn-primary"><i class="fas fa-save"></i>
+									Registrar</button>
+								<button type="button" id="btn-cerrar" class="btn btn-danger" data-dismiss="modal"><i
+										class="fas fa-undo-alt"></i> Cancelar</button>
+							</div>
+
+							<!-- BOTONES FIN -->
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- Modal FIN-->
+
+
+
+
+		<!-- Modal para eliminar INICIO-->
+		<!-- Modal para eliminar FIN-->
+
+	</div>
+	<!-- Contenedor principal FIN-->
+
+
+
+
+	<!-- Insertando un fragmento para el pie -->
+	<div th:insert="plantilla/UITemplate :: pie"></div>
+
+
+
+	<!--Alert consumible-->
+	<script th:inline="javascript" th:if="${Mensaje!=null}">
+		//Recuperar atributo mensaje
+		let men =/*[[${Mensaje}]]*/
+			toastr.success(men, toastr.options = {
+				"timeOut": "2000",
+				"positionClass ": " toast-top-right ",
+			});
+	</script>
+
+
+
+	<script>
+
+		$(document).on("click", "#Guardar", function () {
+			// Desactivar el botón de registro
+			$(this).prop("disabled", true);
+
+			// Obtener los valores de los campos de entrada
+			let codigo = $("#idCodigo").val();
+			let nombre = $("#idNombre").val();
+			let precio = $("#idPrecio").val();
+			let categoria = $("#idCategoria").val();
+
+			// Realizar la petición POST para registrar la sucursal
+			$.post("/producto/grabar", {
+				codigo: codigo,
+				nombre: nombre,
+				precio: precio,
+				categoria: categoria
+			})
+				.done(function () {
+					// Mostrar alerta de éxito si el registro fue exitoso
+					Swal.fire({
+						icon: 'success',
+						title: 'Producto ' + nombre + ' grabado correctamente',
+						showConfirmButton: false,
+						timer: 1500
+					});
+
+					// Redireccionar a la página de lista de sucursales después de 1.5 segundos
+					setTimeout(function () {
+						window.location.href = "/producto/lista";
+					}, 1500);
+				})
+				.fail(function () {
+					// Mostrar alerta de error si el registro falló
+					Swal.fire({
+						icon: 'error',
+						title: 'Error al grabar',
+						text: 'No se pudo grabar el producto',
+						confirmButtonText: 'Cerrar'
+					});
+				})
+				.always(function () {
+					// Habilitar el botón de registro nuevamente
+					$("#Guardar").prop("disabled", false);
+				});
+		});
+
+	</script>
+
+
+
+	<script>
+		let codigoTipo = -1;
+
+		$('#tableProductos').DataTable({
+			language: {
+				search: "Buscar:"
+			}
+		});
+		
+		$(function () {
+			$('#usr1').datepicker({
+				'format': 'yyyy-mm-dd',
+				'autoclose': true
+			});
+
+		});
+		$('#usr1').on('changeDate show', function (e) {
+			$('#idRegistra').bootstrapValidator('revalidateField', $('#usr1'));
+		});
+
+
+		//Asignar evento click a todos los botones con nombre de clase ".btn-editar"
+		$(document).on("click", ".btn-editar", function () {
+			let cod;
+			//obtener el codigo del medicamento actual según el boton que se presiono
+			cod = $(this).parents("tr").find("td")[0].innerHTML;
+			//trabajar con la funcion get para llmaar a la RUTA "buscar"
+			$.get("/producto/buscar?codigo=" + cod, function (response) {
+				//Imprimir en los controles el valor del JSON
+				$("#idCodigo").val(response.codigo);
+				$("#idNombre").val(response.nombre);
+				$("#idPrecio").val(response.precio);
+				$("#idCategoria").val(response.categoria.codigo);
+				console.log(response);
+			})
+		})
+
+
+		$(document).on("click", ".btn-eliminar", function () {
+			let cod;
+			cod = $(this).parents("tr").find("td")[0].innerHTML;
+			console.log(cod);
+			Swal.fire({
+				title: '¿Estás seguro?',
+				text: '¿Deseas eliminar este producto?',
+				icon: 'warning',
+				showCancelButton: true,
+				confirmButtonText: 'Sí, eliminar',
+				cancelButtonText: 'Cancelar'
+			}).then((result) => {
+				if (result.isConfirmed) {
+					confirmarEliminacion(cod);
+
+				}
+			});
+		});
+
+		function confirmarEliminacion(codigo) {
+			fetch('/producto/eliminar/' + codigo, {method: 'DELETE'})
+				.then(response => {
+					if (response.ok) {
+						Swal.fire({
+							title: '¡Producto eliminado!',
+							text: 'El Producto ha sido eliminado correctamente.',
+							icon: 'success'
+						}).then(() => {
+							window.location.href = '/producto/lista';
+						});
+					} else {
+						Swal.fire({
+							title: 'Error',
+							text: 'Error al eliminar el producto. Por favor, inténtalo nuevamente.',
+							icon: 'error'
+						});
+					}
+				})
+				.catch(error => {
+					Swal.fire({
+						title: 'Error',
+						text: 'Error al eliminar el producto. Por favor, inténtalo nuevamente.',
+						icon: 'error'
+					});
+					console.error(error);
+				});
+		}
+
+
+
+		//asignar evento clic al botón con ID btn-cerrar
+		$(document).on("click", "#btn-cerrar", function () {
+			//resetear formulario
+			$("#idRegistra").trigger("reset");
+			$("#idCodigo").val(0);
+			//resetear validaciones
+			$("#idRegistra").data("bootstrapValidator").resetForm(true);
+		})
+
+
+		//asignar evento change al select con ID idLaboratorio
+		$(document).on("change", "#idLaboratorio", function () {
+			//obtener el código del laboratorio actual
+			let codLab;
+			codLab = $(this).val();
+			//limpiar combo idTipo
+			$("#idTipo").empty().append("<option value=' '>[Seleccione Tipo Medicamento]</option>");
+			//get
+			$.get("/medicamento/listarTipos?codigo=" + codLab, function (response) {
+				//bucle
+				$.each(response, function (index, item) {
+					$("#idTipo").append("<option value='" + item.codigo + "'>" + item.nombre + "</option>");
+				})
+				//marcar el tipo de medicamento				
+				$("#idTipo").val(codigoTipo);
+			})
+		})
+
+
+
+
+	</script>
+
+	<script type="text/javascript">
+		$(document).ready(function () {
+
+			$('#idRegistra').bootstrapValidator({
+				feedbackIcons: {
+					valid: 'glyphicon glyphicon-ok',
+					invalid: 'glyphicon glyphicon-remove',
+					validating: 'glyphicon glyphicon-refresh'
+				},
+				fields: {
+
+					Nombres: {
+						selector: '#idNombre',
+						validators: {
+							notEmpty: {
+								message: 'Ingrese nombre'
+							}
+						}
+					},
+					Descripcion: {
+						selector: '#idDescripcion',
+						validators: {
+							notEmpty: {
+								message: 'Ingrese descripción'
+							}
+						}
+					},
+					Stock: {
+						selector: '#idStock',
+						validators: {
+							notEmpty: {
+								message: 'Ingrese stock'
+							},
+							regexp: {
+								regexp: /^[0-9]{1,2}$/,
+								message: 'Campo stock hasta dos cifras'
+							},
+						}
+					},
+					precio: {
+						selector: '#idPrecio',
+						validators: {
+							notEmpty: {
+								message: 'Ingrese precio'
+							},
+							regexp: {
+								regexp: /^(\d+|[0-9]+\.\d{1,2})$/,
+								message: 'Campo precio real hasta dos decimales'
+							},
+						}
+					},
+					Fecha: {
+						selector: '#usr1',
+						validators: {
+							notEmpty: {
+								message: 'Seleccione fecha '
+							},
+							date: {
+								format: 'YYYY-MM-DD',
+								message: 'The format is dd/mm/yyyy'
+							},
+						}
+					},
+					Tipo: {
+						selector: '#idTipo',
+						validators: {
+							notEmpty: {
+								message: 'Seleccione tipo medicamento'
+							},
+						}
+					}
+				}
+			})
+		});    
+	</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+
+</html>

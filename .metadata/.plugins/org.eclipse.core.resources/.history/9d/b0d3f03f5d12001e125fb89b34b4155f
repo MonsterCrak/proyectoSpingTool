@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:fragment="cabecera">
+	<meta charset="ISO-8859-1">
+	<title>Plantilla</title>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+		integrity="sha384-k6j5/+P6zBGFNfu1pjI3IIZh2pzAP0ZB2j0YiP5AFRmfpSSzvNT2e4vtBDZu7X1b"
+		crossorigin="anonymous">
+	<link rel="stylesheet" href="https://cdn.datatables.net/1.10.23/css/dataTables.bootstrap5.min.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/alertify.js/1.13.1/css/alertify.min.css">
+	<link rel="stylesheet"
+		href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.10.0/css/bootstrap-datepicker.min.css">
+
+	<!-- Enlaces repetidos que generan conflicto -->
+	<!-- <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.1/css/all.css" crossorigin="anonymous"> -->
+	<!-- <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css"> -->
+	<!-- <link rel="stylesheet" href="https://kit.fontawesome.com/1da5200486.css" crossorigin="anonymous"> -->
+
+	<script src="https://kit.fontawesome.com/1da5200486.js" crossorigin="anonymous"></script>
+
+	<style>
+		.modal-header,
+		h4,
+		.close {
+			background-color: #286090;
+			color: white !important;
+			text-align: center;
+			font-size: 20px;
+		}
+
+		.help-block {
+			color: red;
+			/*display: none;*/
+		}
+
+		.form-group.has-error .form-control-label {
+			color: red;
+		}
+
+		.form-group.has-error .form-control {
+			border: 1px solid red;
+			box-shadow: 0 0 0 0.2rem rgba(250, 16, 0, 0.18);
+		}
+
+		.alertify .ajs-dialog {
+			top: 50%;
+			transform: translateY(-50%);
+			margin: auto;
+		}
+
+		.ajs-header {
+			background-color: #286090 !important;
+			color: white !important;
+			/*text-align: center;*/
+			font-size: 18px;
+			font-weight: bold;
+		}
+
+		.ajs-ok {
+			color: #fff;
+			background-color: #007bff;
+			border-color: #007bff;
+		}
+
+		.ajs-cancel {
+			color: #fff;
+			background-color: #dc3545;
+			border-color: #dc3545;
+		}
+
+		.btn-primary {
+			background-color: #286090 !important;
+		}
+
+		.dataTables_length,
+		.dataTables_info {
+			display: none;
+		}
+
+		.modal-lg,
+		.modal-xl {
+			max-width: 900px;
+			max-height: 800px;
+		}
+
+		.form-control-feedback2 {
+			margin: 1px;
+			position: absolute;
+			padding: 10px;
+			pointer-events: none;
+			background-color: #e9ecef;
+			border-style: none;
+		}
+
+		.form-control-feedback3 {
+			margin: 1px;
+			position: absolute;
+			margin-left: 225px;
+			padding: 10px;
+			pointer-events: none;
+			background-color: #e9ecef;
+			border-style: none;
+		}
+
+		.form-control {
+			padding-left: 40px !important;
+			height: 30px !important;
+		}
+
+		.colorBloqueado {
+			background: #F7EEC5;
+		}
+
+		.form-control:focus {
+			background: #F7EEC5;
+		}
+
+		/* Additional styles from the second block */
+		body {
+			font-family: verdana;
+			font-size: 12px;
+		}
+
+		fieldset,
+		legend {
+			all: revert;
+		}
+
+		.reset {
+			all: revert;
+		}
+
+		.btn-danger {
+			margin: 0px !important;
+			height: 30px !important;
+			padding-top: 3px !important;
+		}
+	</style>
+
+</head>
+
+<body>
+	<!--crear fragmento "cabecera" -->
+	<div th:fragment="menu">
+		<div class="pos-f-t">
+			<nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+				<div class="navbar-header">
+					<div class="navbar-header">
+						<a class="navbar-brand" href="#">RAPIFOOD</a>
+					</div>
+				</div>
+				<div class="collapse navbar-collapse">
+					<ul class="navbar-nav me-auto mb-2 mb-lg-0" style="padding-left: 30px;">
+						<li class="nav-item" th:each="row:${session.enlaces}">
+							<a class="nav-link" th:text="${row.descripcion}" th:href="${row.ruta}"></a>
+						</li>
+
+					</ul>
+
+					<div class="navbar-nav ml-auto">
+						<div class="flex" style="width:200px!important;padding-top: 10px;font-weight:bold ">
+							<span class="text-white">Usuario: </span><span class="text-white"
+								th:text="${session.datosUsuario}"></span>
+						</div>
+						<span class="nav-item nav-link"></span>
+						<form method="post" th:action="@{/logout}">
+							<input type="submit" class="btn btn-success" value="Cerrar sesión">
+						</form>
+					</div>
+				</div>
+			</nav>
+		</div>
+	</div>
+
+
+
+	<div th:fragment="pie">
+		<!-- ALERTAS PERSONALIZADAS -->
+		<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+		<script
+			src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-validator/0.5.3/js/bootstrapValidator.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/AlertifyJS/1.3.0/alertify.js"></script>
+		<script src="https://kit.fontawesome.com/4f9714e976.js" crossorigin="anonymous"></script>
+
+		<!-- LIBRERÍAS COMUNES -->
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+		<script src="https://cdn.datatables.net/1.10.23/js/jquery.dataTables.min.js"></script>
+		<script src="https://cdn.datatables.net/1.10.23/js/dataTables.bootstrap5.min.js"></script>
+		<script
+			src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.1/js/bootstrap-datepicker.min.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+			integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+			crossorigin="anonymous"></script>
+	</div>
+
+
+</body>
+
+</html>

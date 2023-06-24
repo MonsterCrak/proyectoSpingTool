@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:insert="plantilla/UITemplate :: cabecera">
+	<meta charset="ISO-8859-1">
+	<title>Intranet</title>
+	<style>
+		.red-container {
+			background-color: red;
+			color: red;
+			padding: 10px;
+		}
+	</style>
+</head>
+
+<body>
+	<!-- consumir fragmento cabecera-->
+
+
+	<div class="container">
+		<div class="row">
+			<div class="col-md-6 bg-red">
+				<div th:insert="plantilla/UITemplate :: menu"></div>
+
+			</div>
+			<div class="col-md-6 bg-blue">
+
+				<div style="background-color: red;">
+					Este es un div vacío pintado de rojo.
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+
+	<div th:insert="plantilla/UITemplate :: pie"></div>
+</body>
+
+</html>

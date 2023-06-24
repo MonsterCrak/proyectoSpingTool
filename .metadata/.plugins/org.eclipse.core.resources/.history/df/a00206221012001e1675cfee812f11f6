@@ -1,0 +1,220 @@
+package com.dawiproy.controller;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.SessionAttribute;
+import org.springframework.web.bind.annotation.SessionAttributes;
+
+import com.dawiproy.entity.Boleta;
+import com.dawiproy.entity.Cliente;
+import com.dawiproy.entity.Detalle;
+import com.dawiproy.entity.Empleado;
+import com.dawiproy.entity.Producto;
+import com.dawiproy.entity.ProductoHasBoleta;
+import com.dawiproy.entity.Usuario;
+import com.dawiproy.services.Boletaservices;
+import com.dawiproy.services.Clienteservices;
+import com.dawiproy.services.Empleadoservices;
+import com.dawiproy.services.Productoservices;
+
+import jakarta.servlet.http.HttpSession;
+
+@SessionAttributes({ "data" ,"datosUsuario","codigoUsuario" ,"enlaces" })
+
+@Controller
+@RequestMapping("/boleta")
+public class BoletaController {
+	
+	@Autowired
+	private Clienteservices serCliente;
+	
+	@Autowired
+	private Productoservices serProducto;
+	
+	@Autowired
+	private Empleadoservices serEmpleado;
+	
+	@Autowired
+	private Boletaservices serBoleta;
+	
+	@RequestMapping("/lista")
+	public String lista(Model model) {
+		model.addAttribute("clientes", serCliente.listarTodos());
+		model.addAttribute("productos", serProducto.listarTodos());
+		model.addAttribute("codigoBoleta", serBoleta.obtenerSiguienteNumeroBoleta());
+		return "boleta";
+	}
+	
+	@RequestMapping("/listaJSON")
+	@ResponseBody
+	public List<Cliente> listaJSON(@RequestParam("apellido") String ape) {
+		return serCliente.listaClientes(ape);
+	}
+	
+	
+	@RequestMapping("/listaProductoJSON")
+	@ResponseBody
+	public List<Producto> listaProductoJSON(@RequestParam("nombre") String nom) {
+		return serProducto.buscarProductosPorNombre(nom);
+	}
+	
+	
+	@RequestMapping("/adicionar")
+	@ResponseBody
+
+	public List<Detalle> adicionar(@RequestParam("codigo") int cod, @RequestParam("descripcion") String des,
+			@RequestParam("precio") double pre, @RequestParam("cantidad") int can, HttpSession session) {
+
+		List<Detalle> lista = null;
+
+		try {
+
+			// declarar un arreglo de objetos de la clase Detalle
+
+			// validar si existe el atruto de tipo session data
+			if (session.getAttribute("data") == null) // no existe
+				lista = new ArrayList<Detalle>();
+			else
+				// recuperar el atributo "data" y guardar su contenido en lsita
+
+				lista = (List<Detalle>) session.getAttribute("data");
+
+			// crear objeto de la clase Detalle
+			Detalle det = new Detalle();
+			// setear atrubutos del onjeto det con los valores de los parametros
+			det.setCodigo(cod);
+			det.setDescripcion(des);
+			det.setPrecio(pre);
+			det.setCantidad(can);
+
+			lista.add(det);
+
+			// crear atributo de tipo session "data"
+
+			session.setAttribute("data", lista);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return lista;
+	}
+	
+	
+	@RequestMapping("/eliminar")
+	@ResponseBody
+	public List<Detalle> eliminar(@RequestParam("codigo") int cod, HttpSession session) {
+		List<Detalle> lista = (List<Detalle>) session.getAttribute("data");
+
+		// Buscar el detalle a eliminar por su código
+		Detalle detalleEliminar = null;
+		for (Detalle det : lista) {
+			if (det.getCodigo() == cod) {
+				detalleEliminar = det;
+				break;
+			}
+		}
+
+		// Eliminar el detalle de la lista
+		if (detalleEliminar != null) {
+			lista.remove(detalleEliminar);
+
+			// Actualizar la lista en la sesión
+			session.setAttribute("data", lista);
+		}
+
+		return lista;
+	}
+
+	@RequestMapping("/listaDetalles")
+	@ResponseBody
+	public List<Detalle> listaDetalles(HttpSession session) {
+		List<Detalle> lista = new ArrayList<>();
+
+		try {
+			if (session.getAttribute("data") != null) {
+				lista = (List<Detalle>) session.getAttribute("data");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return lista;
+	}
+
+	@RequestMapping("/grabar")
+
+	public String grabar(@RequestParam("cliente") String clie, @RequestParam("fecha") String fec,
+			@SessionAttribute("CODIGO_USUARIO") int cod, HttpSession session) {
+		try {
+
+			// crear objeto de la entidadboleta
+			Boleta bol = new Boleta();
+			// setear bol
+			bol.setMonto(155.66);
+			bol.setFechaEmision(new SimpleDateFormat("yyyy-MM-dd").parse(fec));
+			// crear objeto de la entidad usuario
+			Usuario u = new Usuario();
+
+			u.setCodigo(cod);
+			// adicioar
+			bol.setUsuario(u);
+			// separa el valor de clie
+			// parametro clie
+			String sep[] = clie.split("-");
+			// crear usuario
+			Cliente c = new Cliente();
+
+			c.setCodigo(Integer.parseInt(sep[0]));
+
+			bol.setCliente(c);
+
+			// DETALLE
+			// "crear un arreglo de objetos de la entidad MedicamentoHasBoleta
+			List<ProductoHasBoleta> lista = new ArrayList<ProductoHasBoleta>();
+
+			// recuperar de tipo sesion data
+			List<Detalle> datos = (List<Detalle>) session.getAttribute("data");
+
+			// bucle para realizar recorrido sobre datos
+			for (Detalle det : datos) {
+				// crear objeto de la entidad medicamentohasboleta
+				ProductoHasBoleta mhb = new ProductoHasBoleta();
+
+				// crear objeto de la entidad medicamento
+				Producto m = new Producto();
+
+				// setera m
+				m.setCodigo(det.getCodigo());
+				// enviar objeto m al objeto mhb
+				mhb.setProducto(m);
+				mhb.setPrecio(det.getPrecio());
+
+				// enviar el objeto del arreglo lista
+				lista.add(mhb);
+			}
+
+			// emviar el arreglo "" al atributo listaMedicamentoHasBoleta
+			bol.setListaMedicamentoHasBoleta(lista);
+			//
+			serBoleta.registrar(bol);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return "redirect:/boleta/lista";
+
+	}
+	
+
+}

@@ -1,0 +1,60 @@
+package com.dawiproy.entity;
+import java.io.Serializable;
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "tb_producto_has_boleta")
+public class ProductoHasBoleta implements Serializable{
+	@EmbeddedId
+	private ProductoHasBoletaPK pk;
+	
+	//Relación MUCHOS  a UNO "Medicamento"
+	@ManyToOne
+	@JoinColumn(name="id_producto",referencedColumnName = "id_producto",insertable = false,updatable =false)
+	private Producto producto;//ASOCI.
+	
+	//Relación MUCHOS  a UNO "Boleta"
+	@ManyToOne
+	@JoinColumn(name="num_bol",referencedColumnName = "num_bol",insertable = false,updatable =false)
+	private Boleta boleta;//ASOCI.
+	
+	@Column(name = "precio")
+	private double precio;
+
+	public ProductoHasBoletaPK getPk() {
+		return pk;
+	}
+
+	public void setPk(ProductoHasBoletaPK pk) {
+		this.pk = pk;
+	}
+
+	public Producto getProducto() {
+		return producto;
+	}
+
+	public void setProducto(Producto producto) {
+		this.producto = producto;
+	}
+
+	public Boleta getBoleta() {
+		return boleta;
+	}
+
+	public void setBoleta(Boleta boleta) {
+		this.boleta = boleta;
+	}
+
+	public double getPrecio() {
+		return precio;
+	}
+
+	public void setPrecio(double precio) {
+		this.precio = precio;
+	}
+
+	
+	
+	
+	
+}

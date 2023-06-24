@@ -32,5 +32,8 @@ public class Empleadoservices {
 	public List<Empleado> listarTodos() {
 		return repo.findAll();
 	}
+	
+	
+
 
 }

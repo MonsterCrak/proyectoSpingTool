@@ -186,7 +186,17 @@
 											</tr>
 										</thead>
 										<tbody>
-
+											<tr th:each="row:${clientes}">
+												<td th:text="${row.codigo}"></td>
+												<td th:text="${row.nombre}"></td>
+												<td th:text="${row.paterno}"></td>
+												<td th:text="${row.materno}"></td>
+												<td>
+													<button type="button" class="btn btn-warning btn-datos-cliente">
+														<i class="fas fa-user-plus"></i>
+													</button>
+												</td>
+											</tr>
 
 										</tbody>
 									</table>
@@ -219,8 +229,7 @@
 											</tr>
 										</thead>
 										<tbody>
-
-
+										
 										</tbody>
 									</table>
 								</fieldset>
@@ -242,16 +251,7 @@
 									</thead>
 									<tbody>
 										<tr>
-											<td>Tiger Nixon</td>
-											<td>System Architect</td>
-											<td>Edinburgh</td>
-											<td>61</td>
-											<td>2011-04-25</td>
-											<td>
-												<button type="button" class="btn btn-danger">
-													<i class="fas fa-trash-alt"></i>
-												</button>
-											</td>
+
 										</tr>
 									</tbody>
 								</table>
@@ -296,7 +296,8 @@
 
 
 
-
+		<!-- ALERTAS PERSONALIZADAS -->
+		<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
 			integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
@@ -436,14 +437,36 @@
 				});
 
 				if (existeProducto) {
-					// Mostrar el modal de error
-					$("#errorModal").modal("show");
-					$("#exampleModal").modal("hide");
-					return;
+					// Mostrar el confirm dialog
+					Swal.fire({
+						title: "Producto existente",
+						text: "El producto ya ha sido agregado a la lista. ¿Deseas actualizar la cantidad?",
+						icon: "question",
+						showCancelButton: true,
+						confirmButtonText: "Sí",
+						cancelButtonText: "No",
+					}).then((result) => {
+						if (result.isConfirmed) {
+							actualizarCantidad(cod, can);
+						} else {
+							// Mostrar el alert de producto existente
+							Swal.fire({
+								title: "Producto existente",
+								text: "El producto ya ha sido agregado a la lista.",
+								icon: "info",
+							});
+						}
+					});
+				} else {
+					// El producto no está en la tabla de detalles, agregarlo normalmente
+					agregarProducto(cod, des, pre, can);
 				}
+			});
+
+			function agregarProducto(cod, des, pre, can) {
 				const boton = `<button type="button" class="btn btn-danger">
-    								<i class="fas fa-trash-alt btn-eliminar"></i>
-  								</button>`;
+        <i class="fas fa-trash-alt btn-eliminar"></i>
+    </button>`;
 
 				$.get("/boleta/adicionar?codigo=" + cod + "&descripcion=" + des + "&precio=" + pre + "&cantidad=" + can, function (response) {
 					$("#tableDetalle tbody").empty();
@@ -451,13 +474,13 @@
 						// Formateo el importe para que no lance muchos decimales
 						const importeFormateado = item.importe.toFixed(2);
 						$("#tableDetalle tbody").append(`<tr>
-					        <td>${item.codigo}</td>
-					        <td>${item.descripcion}</td>
-					        <td>${item.precio}</td>
-					        <td>${item.cantidad}</td>
-					        <td>${importeFormateado}</td>
-					        <td>${boton}</td>
-					      </tr>`);
+                <td>${item.codigo}</td>
+                <td>${item.descripcion}</td>
+                <td>${item.precio}</td>
+                <td>${item.cantidad}</td>
+                <td>${importeFormateado}</td>
+                <td>${boton}</td>
+            </tr>`);
 					});
 
 					// Destruir la tabla antes de reinicializarla
@@ -475,7 +498,22 @@
 						}
 					});
 				});
-			});
+			}
+
+			function actualizarCantidad(cod, can) {
+				$.get("/boleta/actualizarCantidad?codigo=" + cod + "&cantidad=" + can, function (response) {
+					// Actualizar la cantidad en la tabla de detalles
+					$("#tableDetalle tbody tr").each(function () {
+						const codigo = $(this).find("td:first").text();
+						if (codigo === cod) {
+							$(this).find("td:eq(3)").text(can);
+						}
+					});
+				});
+			}
+
+
+
 
 			// Evento para mostrar el exampleModal después de cerrar el errorModal
 			$("#errorModal").on("hidden.bs.modal", function () {
@@ -486,30 +524,29 @@
 
 			//
 			$(document).on("click", ".btn-eliminar", function () {
-				// Ocultar el modal principal
-				$("#exampleModal").modal("hide");
-
 				var fila = $(this).closest("tr");
 				var codigo = fila.find("td:first").text();
 
-				// Asignar el código del detalle al botón "Si" del modal de confirmación
-				$("#btn-confirmar-eliminar").data("codigo", codigo);
+				// Mostrar el alert de confirmación
+				Swal.fire({
+					title: "¿Estás seguro?",
+					text: "Esta acción eliminará el detalle. ¿Deseas continuar?",
+					icon: "warning",
+					showCancelButton: true,
+					confirmButtonText: "Sí",
+					cancelButtonText: "Cancelar",
+				}).then((result) => {
+					if (result.isConfirmed) {
+						// Enviar la solicitud AJAX para eliminar el detalle
+						$.get("/boleta/eliminar?codigo=" + codigo, function (response) {
+							// Eliminar la fila de la tabla
+							fila.remove();
 
-				// Mostrar el modal de confirmación
-				$("#modal-confirmacion").modal("show");
-			});
-
-			$(document).on("click", "#btn-confirmar-eliminar", function () {
-				var codigo = $(this).data("codigo");
-
-				// Enviar la solicitud AJAX para eliminar el detalle
-				$.get("/boleta/eliminar?codigo=" + codigo, function (response) {
-					// Eliminar la fila de la tabla
-					$("tr").has("td:first:contains(" + codigo + ")").remove();
+							// Mostrar una alerta de éxito
+							Swal.fire("Eliminado", "El detalle ha sido eliminado correctamente", "success");
+						});
+					}
 				});
-
-				// Cerrar el modal de confirmación
-				$("#modal-confirmacion").modal("hide");
 			});
 
 			// Evento cuando el modal de confirmación se muestra

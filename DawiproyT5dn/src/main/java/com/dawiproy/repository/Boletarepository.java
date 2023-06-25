@@ -7,7 +7,7 @@ import com.dawiproy.entity.Boleta;
 
 public interface Boletarepository extends JpaRepository<Boleta, Integer>{
 	
-	@Query(value = "SELECT COUNT(*) + 1 AS cantidad_num_bol FROM tb_boleta", nativeQuery = true)
+	@Query(value = "SELECT COUNT(*) AS cantidad_num_bol FROM tb_boleta", nativeQuery = true)
     int obtenerSiguienteNumeroBoleta();
 	
 }

@@ -135,6 +135,22 @@ public class BoletaController {
         return lista;
     }
 
+	@RequestMapping("/actualizarCantidad")
+	@ResponseBody
+	public void actualizarCantidad(@RequestParam("codigo") int cod, @RequestParam("cantidad") int can, HttpSession session) {
+	    List<Detalle> lista = (List<Detalle>) session.getAttribute("data");
+	    
+	    if (lista != null) {
+	        for (Detalle det : lista) {
+	            if (det.getCodigo() == cod) {
+	                det.setCantidad(can);
+	                break;
+	            }
+	        }
+	    }
+	}
+
+	
 	@RequestMapping("/listaDetalles")
 	@ResponseBody
 	public List<Detalle> listaDetalles(HttpSession session) {

@@ -1,0 +1,567 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Bootstrap demo</title>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet"
+		integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+	<style>
+		body {
+			font-family: verdana;
+			font-size: 12px;
+		}
+
+		.modal-header,
+		h4,
+		.close {
+			background-color: #286090;
+			color: white !important;
+			text-align: center;
+			font-size: 20px;
+		}
+
+		.form-control {
+			height: 30px !important;
+			/*padding-left: 40px!important;*/
+		}
+
+		fieldset,
+		legend {
+			all: revert;
+		}
+
+		.reset {
+			all: revert;
+		}
+
+		.btn-danger {
+			margin: 0px !important;
+			height: 30px !important;
+			padding-top: 3px !important;
+		}
+
+		.colorBloqueado {
+			background: #F7EEC5;
+		}
+
+		.form-control:focus {
+			background: #F7EEC5;
+		}
+
+
+
+		
+	</style>
+	<script src="https://kit.fontawesome.com/1da5200486.js" crossorigin="anonymous"></script>
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.1/css/all.css" crossorigin="anonymous">
+	<link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css">
+
+
+</head>
+
+<body>
+	
+	<div th:insert="plantilla/UITemplate :: menu"></div>
+	
+	<!--Modal eliminar detalle-->
+	<div class="modal" id="modal-confirmacion" tabindex="-1">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">Confirmación de eliminación</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<p>¿Seguro de eliminar el detalle?</p>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-danger" id="btn-confirmar-eliminar">Sí</button>
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!--Modal eliminar detalle fin-->
+
+
+	<!--Modal actualizar detalle-->
+	<div class="modal" id="modal-confirmacion-modificar" tabindex="-1">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">Confirmación de modificación</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<p>El producto ya existe en el detalle. ¿Desea modificar la cantidad?</p>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-primary" id="btn-confirmar-modificar">Sí</button>
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!--Modal actualizar detalle fin-->
+
+	<!-- Otro contenido HTML aquí -->
+
+	<!-- Modal de error -->
+	<div class="modal fade" id="errorModal" tabindex="-1" aria-labelledby="errorModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="errorModalLabel">Error</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<p>El producto ya ha sido agregado.</p>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+
+	<!-- Button trigger modal -->
+	<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+		Nueva Boleta
+	</button>
+
+	<!-- Modal -->
+	<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-xl">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h1 class="modal-title fs-5" id="exampleModalLabel">Boleta</h1>
+				</div>
+				<div class="modal-body">
+					<form method="post" th:action="@{/boleta/grabar}">
+						<div class="row">
+							<div class="col-3">
+								<label for="inputPassword6" class="col-form-label">Número</label>
+								<input type="text" class="form-control colorBloqueado" name="numero" readonly>
+							</div>
+							<div class="col-3">
+								<label for="inputPassword6" class="col-form-label">Cliente</label>
+								<input type="text" class="form-control colorBloqueado" name="cliente" id="id-cliente"
+									readonly>
+							</div>
+							<div class="col-3">
+								<label for="inputPassword6" class="col-form-label">Empleado</label>
+								<input type="text" class="form-control colorBloqueado" name="emleado" readonly>
+							</div>
+							<div class="col-3">
+								<label for="inputPassword6" class="col-form-label">Fecha</label>
+								<input type="date" class="form-control" name="fecha">
+							</div>
+
+						</div>
+						<hr />
+
+						<div class="row mt-3">
+							<div class="col-lg-6">
+								<fieldset class="reset">
+									<legend class="reset">Consulta Cliente</legend>
+									<div class="row mt-3">
+										<label for="inputEmail3" class="col-sm-2">Cliente</label>
+										<div class="col-sm-4">
+											<input type="text" class="form-control" id="txtCliente">
+										</div>
+										<div class="col-sm-6">
+											<button type="button" class="btn btn-info" id="btn-buscar-cliente">
+												<i class="fas fa-search"></i>
+
+											</button>
+										</div>
+									</div>
+									<table id="tableClientes" class="table table-striped mt-4" style="width:100%">
+										<thead>
+											<tr>
+												<th>Código</th>
+												<th>Nombre</th>
+												<th>Paterno</th>
+												<th>Matero</th>
+												<th></th>
+											</tr>
+										</thead>
+										<tbody>
+
+
+										</tbody>
+									</table>
+								</fieldset>
+							</div>
+							<div class="col-lg-6">
+								<fieldset class="reset">
+									<legend class="reset">Consulta Producto</legend>
+									<div class="row mt-3">
+										<label for="inputEmail3" class="col-sm-2">Producto</label>
+										<div class="col-sm-4">
+											<input type="text" class="form-control" id="txtProducto">
+										</div>
+										<div class="col-sm-4">
+											<button type="button" class="btn btn-success" id="btn-buscar-producto">
+												<i class="fas fa-search"></i>
+
+											</button>
+										</div>
+
+									</div>
+									<table id="tableProducto" class="table table-striped mt-4" style="width:100%">
+										<thead>
+											<tr>
+												<th>Código</th>
+												<th>Nombre</th>
+												<th>Precio</th>
+												<th>Stock</th>
+												<th></th>
+											</tr>
+										</thead>
+										<tbody>
+
+
+										</tbody>
+									</table>
+								</fieldset>
+							</div>
+						</div>
+						<hr>
+						<div class="row">
+							<div class="col-md-7">
+								<table id="tableDetalle" class="table table-striped" style="width:100%">
+									<thead>
+										<tr>
+											<th>Código</th>
+											<th>Descripción</th>
+											<th>Precio</th>
+											<th>Cantidad</th>
+											<th>Importe</th>
+											<th></th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr>
+											<td>Tiger Nixon</td>
+											<td>System Architect</td>
+											<td>Edinburgh</td>
+											<td>61</td>
+											<td>2011-04-25</td>
+											<td>
+												<button type="button" class="btn btn-danger">
+													<i class="fas fa-trash-alt"></i>
+												</button>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+							<div class="col-lg-5 my-3">
+								<div class="row">
+									<div class="col-md-3">
+										<label for="inputEmail3">Código</label>
+										<input type="text" class="form-control colorBloqueado" id="id-codigo" readonly>
+									</div>
+									<div class="col-md-6">
+										<label for="inputEmail3">Descripción</label>
+										<input type="text" class="form-control colorBloqueado" id="id-descripcion"
+											readonly>
+									</div>
+									<div class="col-md-3">
+										<label for="inputEmail3">Precio</label>
+										<input type="text" class="form-control colorBloqueado" id="id-precio" readonly>
+									</div>
+								</div>
+								<div class="row mt-3">
+									<div class="col-md-3">
+										<label for="inputEmail3">Cantidad</label>
+										<input type="text" class="form-control colorBloqueado" id="id-cantidad">
+									</div>
+									<div class="col-md-9 mt-2">
+										<button type="button" class="btn btn-warning" id="btn-adicionar">
+											<i class="fas fa-plus-square"></i> Adicionar
+										</button>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="modal-footer">
+							<button type="submit" class="btn btn-primary"><i class="fas fa-save"></i></button>
+							<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+
+
+
+
+
+		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+			integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
+			crossorigin="anonymous"></script>
+
+		<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+		<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+		<script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
+
+
+
+		<script>
+			$("#tableClientes").DataTable({
+				"searching": false,
+				"lengthChange": false
+			});
+			$("#tableProducto").DataTable({
+				"searching": false,
+				"lengthChange": false
+			});
+			$(document).on("click", "#btn-buscar-cliente", function () {
+				let ape = $("#txtCliente").val()
+				//reorganizar tabla
+				$("#tableClientes").DataTable().destroy();
+				$("#tableClientes tbody").empty();
+				$.get("/boleta/listaJSON?apellido=" + ape, function (response) {
+					//bucle
+					$.each(response, function (index, item) {
+						$("#tableClientes tbody").append(`<tr><td>${item.codigo}</td><td>
+																 ${item.nombre}</td><td>
+																 ${item.paterno}</td><td>
+																 ${item.materno}</td><td>
+													<button type="button" class="btn btn-warning btn-datos-cliente">
+														<i class="fas fa-user-plus"></i>
+													</button>	 	 	 
+					`)
+					})
+					$("#tableClientes").DataTable({
+						"searching": false,
+						"lengthChange": false
+					});
+				})
+
+			})
+			$(document).on("click", "#btn-buscar-producto", function () {
+				let nom = $("#txtProducto").val()
+				$("#tableProducto").DataTable().destroy();
+				$("#tableProducto tbody").empty();
+				$.get("/boleta/listaProductoJSON?nombre=" + nom, function (response) {
+					$.each(response, function (index, item) {
+						$("#tableMedicamento tbody").append(`<tr><td>${item.codigo}</td><td>
+																 ${item.nombre}</td><td>
+																 ${item.precio}</td><td>
+																 ${item.stock}</td><td>
+													<button type="button" class="btn btn-warning btn-datos-medicamento">
+														<i class="fas fa-laptop-medical"></i>
+													</button>	 	 	 
+					`);
+					})
+					$("#tableProducto").DataTable({
+						"searching": false,
+						"lengthChange": false
+					});
+				})
+			})
+
+
+
+
+
+
+			$(document).on("click", ".btn-datos-cliente", function () {
+
+				let cod, nom, pat, mat;
+				cod = $(this).parents("tr").find("td")[0].innerHTML;
+				nom = $(this).parents("tr").find("td")[1].innerHTML;
+				pat = $(this).parents("tr").find("td")[2].innerHTML;
+				mat = $(this).parents("tr").find("td")[3].innerHTML;
+
+				$("#id-cliente").val(cod + "-" + pat.trim() + " " + mat.trim() + " " + nom.trim());
+
+			})
+
+
+
+
+			$(document).on("click", ".btn-datos-medicamento", function () {
+
+				let cod, nom, pre;
+				cod = $(this).parents("tr").find("td")[0].innerHTML;
+				nom = $(this).parents("tr").find("td")[1].innerHTML;
+				pre = $(this).parents("tr").find("td")[2].innerHTML;
+
+				$("#id-codigo").val(cod);
+				$("#id-descripcion").val(nom.trim());
+				$("#id-precio").val(pre.trim());
+
+			})
+
+
+
+
+
+			//
+			$(document).on("click", "#btn-adicionar", function () {
+				let cod, des, pre, can;
+				cod = $("#id-codigo").val();
+				des = $("#id-descripcion").val();
+				pre = $("#id-precio").val();
+				can = $("#id-cantidad").val();
+
+				// Verificar si el producto ya está en la tabla de detalles
+				const existeProducto = $("#tableDetalle tbody tr").toArray().some(function (fila) {
+					const codigo = $(fila).find("td:first").text();
+					return codigo === cod;
+				});
+
+				if (existeProducto) {
+					// Mostrar el modal de error
+					$("#errorModal").modal("show");
+					$("#exampleModal").modal("hide");
+					return;
+				}
+				const boton = `<button type="button" class="btn btn-danger">
+    								<i class="fas fa-trash-alt btn-eliminar"></i>
+  								</button>`;
+
+				$.get("/boleta/adicionar?codigo=" + cod + "&descripcion=" + des + "&precio=" + pre + "&cantidad=" + can, function (response) {
+					$("#tableDetalle tbody").empty();
+					$.each(response, function (index, item) {
+						// Formateo el importe para que no lance muchos decimales
+						const importeFormateado = item.importe.toFixed(2);
+						$("#tableDetalle tbody").append(`<tr>
+					        <td>${item.codigo}</td>
+					        <td>${item.descripcion}</td>
+					        <td>${item.precio}</td>
+					        <td>${item.cantidad}</td>
+					        <td>${importeFormateado}</td>
+					        <td>${boton}</td>
+					      </tr>`);
+					});
+
+					// Destruir la tabla antes de reinicializarla
+					if ($.fn.DataTable.isDataTable("#tableMedicamento")) {
+						$("#tableMedicamento").DataTable().destroy();
+					}
+
+					$("#tableMedicamento").DataTable({
+						searching: false,
+						lengthChange: false
+					});
+				});
+			});
+
+			// Evento para mostrar el exampleModal después de cerrar el errorModal
+			$("#errorModal").on("hidden.bs.modal", function () {
+				$("#exampleModal").modal("show");
+			});
+
+
+
+			//
+			$(document).on("click", ".btn-eliminar", function () {
+				// Ocultar el modal principal
+				$("#exampleModal").modal("hide");
+
+				var fila = $(this).closest("tr");
+				var codigo = fila.find("td:first").text();
+
+				// Asignar el código del detalle al botón "Si" del modal de confirmación
+				$("#btn-confirmar-eliminar").data("codigo", codigo);
+
+				// Mostrar el modal de confirmación
+				$("#modal-confirmacion").modal("show");
+			});
+
+			$(document).on("click", "#btn-confirmar-eliminar", function () {
+				var codigo = $(this).data("codigo");
+
+				// Enviar la solicitud AJAX para eliminar el detalle
+				$.get("/boleta/eliminar?codigo=" + codigo, function (response) {
+					// Eliminar la fila de la tabla
+					$("tr").has("td:first:contains(" + codigo + ")").remove();
+				});
+
+				// Cerrar el modal de confirmación
+				$("#modal-confirmacion").modal("hide");
+			});
+
+			// Evento cuando el modal de confirmación se muestra
+			$("#modal-confirmacion").on("show.bs.modal", function () {
+				// Ocultar el modal principal
+				$("#exampleModal").modal("hide");
+			});
+
+			// Evento cuando el modal de confirmación se oculta
+			$("#modal-confirmacion").on("hidden.bs.modal", function () {
+				// Mostrar el modal principal nuevamente
+				$("#exampleModal").modal("show");
+			});
+
+			//
+			$(document).ready(function () {
+				var tableDetalle;
+
+				// Función para obtener los detalles mediante una solicitud AJAX
+				function obtenerDetalles() {
+					$.get("/boleta/listaDetalles", function (response) {
+						// Limpiar el contenido actual de la tabla
+						$("#tableDetalle tbody").empty();
+
+						// Recorrer la lista de detalles y agregar filas a la tabla
+						$.each(response, function (index, detalle) {
+							// Formatear el importe para que no lance muchos decimales
+							const importeFormateado = detalle.importe.toFixed(2);
+
+							// Crear la fila de la tabla con los datos del detalle
+							var fila = `<tr>
+						          <td>${detalle.codigo}</td>
+						          <td>${detalle.descripcion}</td>
+						          <td>${detalle.precio}</td>
+						          <td>${detalle.cantidad}</td>
+						          <td>${importeFormateado}</td>
+						          <td>
+						            <button type="button" class="btn btn-danger btn-eliminar">
+						              <i class="fas fa-trash-alt"></i>
+						            </button>
+						          </td>
+						        </tr>`;
+
+							// Agregar la fila a la tabla
+							$("#tableDetalle tbody").append(fila);
+						});
+
+						if (tableDetalle) {
+							tableDetalle.destroy();
+						}
+
+						// Inicializar la tabla de detalles
+						$("#tableDetalle").DataTable({
+							searching: false,
+							lengthChange: false
+						});
+					});
+				}
+
+				// Llamar a la función obtenerDetalles al cargar la página
+				obtenerDetalles();
+
+			});
+
+
+
+
+
+		</script>
+
+
+</body>
+
+</html>

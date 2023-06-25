@@ -15,6 +15,7 @@ public class Detalle {
 	public void setCodigo(int codigo) {
 		this.codigo = codigo;
 	}
+
 	public String getDescripcion() {
 		return descripcion;
 	}

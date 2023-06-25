@@ -1,0 +1,483 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:insert="plantilla/UITemplate :: cabecera">
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Bootstrap demo</title>
+	<!--link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css"
+		integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous"-->
+	<!--style>
+		body {
+			font-family: verdana;
+			font-size: 12px;
+		}
+
+		.modal-header,
+		h4,
+		.close {
+			background-color: #286090;
+			color: white !important;
+			text-align: center;
+			font-size: 20px;
+		}
+
+		.form-control {
+			height: 30px !important;
+			/*padding-left: 40px!important;*/
+		}
+
+		fieldset,
+		legend {
+			all: revert;
+		}
+
+		.reset {
+			all: revert;
+		}
+
+		.btn-danger {
+			margin: 0px !important;
+			height: 30px !important;
+			padding-top: 3px !important;
+		}
+
+		.colorBloqueado {
+			background: #F7EEC5;
+		}
+
+		.form-control:focus {
+			background: #F7EEC5;
+		}
+	</style-->
+	<!--script src="https://kit.fontawesome.com/1da5200486.js" crossorigin="anonymous"></script-->
+	<!--link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.1/css/all.css" crossorigin="anonymous"-->
+	<!--link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css"-->
+
+
+</head>
+
+<body>
+
+
+	<div th:insert="plantilla/UITemplate :: menu"></div>
+
+	<br />
+	<br />
+
+	<!-- Boleta -->
+	<div class="container">
+		<h1 class="modal-title fs-5">Boleta</h1>
+		<form method="post" th:action="@{/boleta/grabar}">
+			<div class="row">
+				<div class="col-3">
+					<label for="inputPassword6" class="col-form-label">Número</label>
+					<input type="text" class="form-control colorBloqueado" name="numero" readonly
+						th:value="${codigoBoleta}">
+				</div>
+				<div class="col-3">
+					<label for="inputPassword6" class="col-form-label">Cliente</label>
+					<input type="text" class="form-control colorBloqueado" name="cliente" id="id-cliente" readonly>
+				</div>
+				<div class="col-3">
+					<label for="inputPassword6" class="col-form-label">Fecha</label>
+					<input type="date" class="form-control" name="fecha">
+				</div>
+			</div>
+			<hr>
+			<div class="row mt-3">
+				<div class="col-lg-6">
+					<fieldset class="reset">
+						<legend class="reset">Consulta Cliente</legend>
+						<div class="row mt-3">
+							<label for="inputEmail3" class="col-sm-2">Cliente</label>
+							<div class="col-sm-4">
+								<input type="text" class="form-control" id="txtCliente">
+							</div>
+							<div class="col-sm-6">
+								<button type="button" class="btn btn-info" id="btn-buscar-cliente">
+									<i class="fas fa-search"></i>
+								</button>
+							</div>
+						</div>
+						<table id="tableClientes" class="table table-striped mt-4" style="width:100%">
+							<thead>
+								<tr>
+									<th>Código</th>
+									<th>Nombre</th>
+									<th>Paterno</th>
+									<th>Matero</th>
+									<th></th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr th:each="row:${clientes}">
+									<td th:text="${row.codigo}"></td>
+									<td th:text="${row.nombre}"></td>
+									<td th:text="${row.paterno}"></td>
+									<td th:text="${row.materno}"></td>
+									<td>
+										<button type="button" class="btn btn-warning btn-datos-cliente">
+											<i class="fas fa-user-plus"></i>
+										</button>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</fieldset>
+				</div>
+				<div class="col-lg-6">
+					<fieldset class="reset">
+						<legend class="reset">Consulta Producto</legend>
+						<div class="row mt-3">
+							<label for="inputEmail3" class="col-sm-2">Producto</label>
+							<div class="col-sm-4">
+								<input type="text" class="form-control" id="txtProducto">
+							</div>
+							<div class="col-sm-4">
+								<button type="button" class="btn btn-success" id="btn-buscar-producto">
+									<i class="fas fa-search"></i>
+								</button>
+							</div>
+						</div>
+						<table id="tableProductos" class="table table-striped mt-4" style="width:100%">
+							<thead>
+								<tr>
+									<th>Código</th>
+									<th>Producto</th>
+									<th>Precio</th>
+									<th>Categoria</th>
+									<th></th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr th:each="row:${productos}">
+									<td th:text="${row.codigo}"></td>
+									<td th:text="${row.nombre}"></td>
+									<td th:text="${row.precio}"></td>
+									<td th:text="${row.categoria.nombre}"></td>
+									<td>
+										<button type="button" class="btn btn-warning btn-datos-producto">
+											<i class="fas fa-laptop-medical"></i>
+										</button>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</fieldset>
+				</div>
+			</div>
+			<hr>
+			<div class="row">
+				<div class="col-md-7">
+					<table id="tableDetalle" class="table table-striped" style="width:100%">
+						<thead>
+							<tr>
+								<th>Código</th>
+								<th>Producto</th>
+								<th>Precio</th>
+								<th>Cantidad</th>
+								<th>Importe</th>
+								<th></th>
+							</tr>
+						</thead>
+						<tbody>
+							<!-- Las filas se generarán dinámicamente con JavaScript -->
+						</tbody>
+					</table>
+				</div>
+				<div class="col-lg-5 my-3">
+					<div class="row">
+						<div class="col-md-3">
+							<label for="inputEmail3">Código</label>
+							<input type="text" class="form-control colorBloqueado" id="id-codigo" readonly>
+						</div>
+						<div class="col-md-6">
+							<label for="inputEmail3">Producto</label>
+							<input type="text" class="form-control colorBloqueado" id="id-descripcion" readonly>
+						</div>
+						<div class="col-md-3">
+							<label for="inputEmail3">Precio</label>
+							<input type="text" class="form-control colorBloqueado" id="id-precio" readonly>
+						</div>
+					</div>
+					<div class="row mt-3">
+						<div class="col-md-3">
+							<label for="inputEmail3">Cantidad</label>
+							<input type="text" class="form-control colorBloqueado" id="id-cantidad">
+						</div>
+						<div class="col-md-9 mt-2">
+							<button type="button" class="btn btn-warning" id="btn-adicionar">
+								<i class="fas fa-plus-square"></i> Adicionar
+							</button>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="my-3">
+				<button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Save</button>
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+			</div>
+		</form>
+	</div>
+
+
+
+	<div th:insert="plantilla/UITemplate :: pie"></div>
+
+	<!--boleta fin-->
+
+	<script src="//cdn.datatables.net/plug-ins/1.10.25/i18n/Spanish.json"></script>
+
+
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+		integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
+		crossorigin="anonymous"></script>
+
+	<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+	<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+	<script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
+
+
+
+	<script>
+
+
+
+		// Configuración de la tabla de clientes
+		$("#tableClientes").DataTable({
+			"searching": false,
+			"lengthChange": false,
+			"pageLength": 5,
+			"info": false,
+			"language": {
+				"url": "//cdn.datatables.net/plug-ins/1.10.25/i18n/Spanish.json" // Ruta del archivo de traducción en español
+			}
+		});
+
+		// Configuración de la tabla de productos
+		$("#tableProductos").DataTable({
+			"searching": false,
+			"lengthChange": false,
+			"pageLength": 5,
+			"info": false,
+			"language": {
+				"url": "//cdn.datatables.net/plug-ins/1.10.25/i18n/Spanish.json" // Ruta del archivo de traducción en español
+			}
+		});
+
+		$(document).on("click", "#btn-buscar-cliente", function () {
+			let ape = $("#txtCliente").val()
+			//reorganizar tabla
+			$("#tableClientes").DataTable().destroy();
+			$("#tableClientes tbody").empty();
+			$.get("/boleta/listaJSON?apellido=" + ape, function (response) {
+				//bucle
+				$.each(response, function (index, item) {
+					$("#tableClientes tbody").append(`<tr><td>${item.codigo}</td><td>
+																 ${item.nombre}</td><td>
+																 ${item.paterno}</td><td>
+																 ${item.materno}</td><td>
+													<button type="button" class="btn btn-warning btn-datos-cliente">
+														<i class="fas fa-user-plus"></i>
+													</button>	 	 	 
+					`)
+				})
+				$("#tableClientes").DataTable({
+					"searching": false,
+					"lengthChange": false,
+					"pageLength": 5,
+					"info": false,
+					"language": {
+						"url": "//cdn.datatables.net/plug-ins/1.10.25/i18n/Spanish.json" // Ruta del archivo de traducción en español
+					}
+				});
+			})
+
+		})
+
+		$(document).on("click", "#btn-buscar-producto", function () {
+			let nom = $("#txtProducto").val()
+			$("#tableProductos").DataTable().destroy();
+			$("#tableProductos tbody").empty();
+			$.get("/boleta/listaProductoJSON?nombre=" + nom, function (response) {
+				$.each(response, function (index, item) {
+					$("#tableProductos tbody").append(`<tr><td>${item.codigo}</td><td>
+																 ${item.nombre}</td><td>
+																 ${item.precio}</td><td>
+																 ${item.categoria.nombre}</td><td>
+													<button type="button" class="btn btn-warning btn-datos-producto">
+											<i class="fas fa-laptop-medical"></i>
+										</button>	 	 	 
+					`);
+				})
+				$("#tableProductos").DataTable({
+					"searching": false,
+					"lengthChange": false,
+					"pageLength": 5,
+					"info": false,
+					"language": {
+						"url": "//cdn.datatables.net/plug-ins/1.10.25/i18n/Spanish.json" // Ruta del archivo de traducción en español
+					}
+				});
+			})
+		})
+
+
+
+
+
+
+
+		$(document).on("click", ".btn-datos-cliente", function () {
+
+			let cod, nom, pat, mat;
+			cod = $(this).parents("tr").find("td")[0].innerHTML;
+			nom = $(this).parents("tr").find("td")[1].innerHTML;
+			pat = $(this).parents("tr").find("td")[2].innerHTML;
+			mat = $(this).parents("tr").find("td")[3].innerHTML;
+
+			$("#id-cliente").val(cod + "-" + pat.trim() + " " + mat.trim() + " " + nom.trim());
+
+		})
+
+
+
+
+		$(document).on("click", ".btn-datos-producto", function () {
+
+			let cod, nom, pre;
+			cod = $(this).parents("tr").find("td")[0].innerHTML;
+			nom = $(this).parents("tr").find("td")[1].innerHTML;
+			pre = $(this).parents("tr").find("td")[2].innerHTML;
+
+			$("#id-codigo").val(cod);
+			$("#id-descripcion").val(nom.trim());
+			$("#id-precio").val(pre.trim());
+
+		})
+
+
+		$(document).on("click", "#btn-adicionar", function () {
+			let cod, des, pre, can;
+			cod = $("#id-codigo").val();
+			des = $("#id-descripcion").val();
+			pre = $("#id-precio").val();
+			can = $("#id-cantidad").val();
+
+			// Verificar si el producto ya está en la tabla de detalles
+			const existeProducto = $("#tableDetalle tbody tr").toArray().some(function (fila) {
+				const codigo = $(fila).find("td:first").text();
+				return codigo === cod;
+			});
+
+			if (existeProducto) {
+				// Mostrar el modal de error
+				$("#errorModal").modal("show");
+				$("#exampleModal").modal("hide");
+				return;
+			}
+			const boton = `<button type="button" class="btn btn-danger">
+    								<i class="fas fa-trash-alt btn-eliminar"></i>
+  								</button>`;
+
+			$.get("/boleta/adicionar?codigo=" + cod + "&descripcion=" + des + "&precio=" + pre + "&cantidad=" + can, function (response) {
+				$("#tableDetalle tbody").empty();
+				$.each(response, function (index, item) {
+					// Formateo el importe para que no lance muchos decimales
+					const importeFormateado = item.importe.toFixed(2);
+					$("#tableDetalle tbody").append(`<tr>
+					        <td>${item.codigo}</td>
+					        <td>${item.descripcion}</td>
+					        <td>${item.precio}</td>
+					        <td>${item.cantidad}</td>
+					        <td>${importeFormateado}</td>
+					        <td>${boton}</td>
+					      </tr>`);
+				});
+
+				// Destruir la tabla antes de reinicializarla
+				if ($.fn.DataTable.isDataTable("#tableProducto")) {
+					$("#tableProducto").DataTable().destroy();
+				}
+
+				$("#tableProducto").DataTable({
+					searching: false,
+					lengthChange: false
+				});
+			});
+		});
+
+
+
+
+		$(document).on("click", ".btn-eliminar", function () {
+			var fila = $(this).closest("tr");
+			var codigo = fila.find("td:first").text();
+
+			console.log(codigo)
+
+			// Mostrar la alerta de confirmación personalizada
+			Swal.fire({
+				title: "Confirmación de eliminación",
+				text: "¿Seguro de eliminar el medicamento seleccionado?",
+				icon: "warning",
+				showCancelButton: true,
+				confirmButtonColor: "#d33",
+				cancelButtonColor: "#3085d6",
+				confirmButtonText: "Eliminar",
+				cancelButtonText: "Cancelar"
+			}).then((result) => {
+				if (result.isConfirmed) {
+					// Enviar la solicitud AJAX para eliminar el detalle
+					$.get("/boleta/eliminar?codigo=" + codigo, function (response) {
+						// Eliminar la fila de la tabla
+						fila.remove();
+						// Mostrar alerta de eliminación exitosa
+						Swal.fire("Eliminado", "El medicamento ha sido eliminado correctamente.", "success");
+					});
+				}
+			});
+		});
+
+
+		function obtenerDetalles() {
+			$.get("/listaDetalles", function (data) {
+				// Limpiar el cuerpo de la tabla
+				$("#tableDetalle tbody").empty();
+
+				// Recorrer la lista de detalles y generar las filas de la tabla
+				for (var i = 0; i < data.length; i++) {
+					var detalle = data[i];
+					var fila = "<tr>" +
+						"<td>" + detalle.codigo + "</td>" +
+						"<td>" + detalle.producto + "</td>" +
+						"<td>" + detalle.precio + "</td>" +
+						"<td>" + detalle.cantidad + "</td>" +
+						"<td>" + detalle.importe + "</td>" +
+						"</tr>";
+					$("#tableDetalle tbody").append(fila);
+				}
+
+				// Imprimir los datos en la consola
+				console.log(data);
+			});
+		}
+
+
+
+
+		// Evento para mostrar el exampleModal después de cerrar el errorModal
+		$("#errorModal").on("hidden.bs.modal", function () {
+			$("#exampleModal").modal("show");
+		});
+
+
+
+
+	</script>
+
+
+</body>
+
+</html>

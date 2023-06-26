@@ -392,9 +392,13 @@
 
 
 
-		$('#tableCliente').DataTable({
+		$("#tableClientes").DataTable({
+			"searching": true,
+			"lengthChange": false,
+			"pageLength": 5,
+			"info": false,
 			"language": {
-				"url": "//cdn.datatables.net/plug-ins/1.10.25/i18n/Spanish.json"
+				"url": "//cdn.datatables.net/plug-ins/1.10.25/i18n/Spanish.json" // Ruta del archivo de traducción en español
 			}
 		});
 		$(function () {
@@ -444,12 +448,6 @@
 
 
 	<script type="text/javascript">
-		$('#tableClientes').DataTable({
-			language: {
-				search: "Buscar:"
-
-			}
-		});
 
 		$(document).ready(function () {
 

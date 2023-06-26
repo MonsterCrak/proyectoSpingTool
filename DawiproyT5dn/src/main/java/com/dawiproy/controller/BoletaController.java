@@ -1,18 +1,24 @@
 package com.dawiproy.controller;
 
+import java.io.File;
+import java.io.OutputStream;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.ResourceUtils;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.dawiproy.entity.Boleta;
 import com.dawiproy.entity.Cliente;
@@ -26,48 +32,54 @@ import com.dawiproy.services.Clienteservices;
 import com.dawiproy.services.Empleadoservices;
 import com.dawiproy.services.Productoservices;
 
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperExportManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 
-@SessionAttributes({ "data" ,"datosUsuario","codigoUsuario" ,"enlaces" })
+@SessionAttributes({ "data", "datosUsuario", "codigoUsuario", "enlaces" })
 
 @Controller
 @RequestMapping("/boleta")
 public class BoletaController {
-	
+
 	@Autowired
 	private Clienteservices serCliente;
-	
+
 	@Autowired
 	private Productoservices serProducto;
-	
+
 	@Autowired
 	private Empleadoservices serEmpleado;
-	
+
 	@Autowired
 	private Boletaservices serBoleta;
-	
+
 	@RequestMapping("/lista")
 	public String lista(Model model) {
 		model.addAttribute("clientes", serCliente.listarTodos());
 		model.addAttribute("productos", serProducto.listarTodos());
 		model.addAttribute("codigoBoleta", serBoleta.obtenerSiguienteNumeroBoleta());
+		model.addAttribute("boletas", serBoleta.listarBoletas());
 		return "boleta";
 	}
-	
+
 	@RequestMapping("/listaJSON")
 	@ResponseBody
 	public List<Cliente> listaJSON(@RequestParam("apellido") String ape) {
 		return serCliente.listaClientes(ape);
 	}
-	
-	
+
 	@RequestMapping("/listaProductoJSON")
 	@ResponseBody
 	public List<Producto> listaProductoJSON(@RequestParam("nombre") String nom) {
 		return serProducto.buscarProductosPorNombre(nom);
 	}
-	
-	
+
 	@RequestMapping("/adicionar")
 	@ResponseBody
 
@@ -102,55 +114,58 @@ public class BoletaController {
 
 			session.setAttribute("data", lista);
 
+			// Agregar impresión en la consola
+			System.out.println("Productos en sesión: " + lista);
+
 		} catch (Exception e) {
+			System.out.println("Se esta creando una excepcion");
 			e.printStackTrace();
 		}
 
 		return lista;
 	}
-	
-	
+
 	@RequestMapping("/eliminar")
-    @ResponseBody
-    public List<Detalle> eliminar(@RequestParam("codigo") int cod, HttpSession session) {
-        List<Detalle> lista = (List<Detalle>) session.getAttribute("data");
-        
-        // Buscar el detalle a eliminar por su código
-        Detalle detalleEliminar = null;
-        for (Detalle det : lista) {
-            if (det.getCodigo() == cod) {
-                detalleEliminar = det;
-                break;
-            }
-        }
-        
-        // Eliminar el detalle de la lista
-        if (detalleEliminar != null) {
-            lista.remove(detalleEliminar);
-            
-            // Actualizar la lista en la sesión
-            session.setAttribute("data", lista);
-        }
-        
-        return lista;
-    }
+	@ResponseBody
+	public List<Detalle> eliminar(@RequestParam("codigo") int cod, HttpSession session) {
+		List<Detalle> lista = (List<Detalle>) session.getAttribute("data");
+
+		// Buscar el detalle a eliminar por su código
+		Detalle detalleEliminar = null;
+		for (Detalle det : lista) {
+			if (det.getCodigo() == cod) {
+				detalleEliminar = det;
+				break;
+			}
+		}
+
+		// Eliminar el detalle de la lista
+		if (detalleEliminar != null) {
+			lista.remove(detalleEliminar);
+
+			// Actualizar la lista en la sesión
+			session.setAttribute("data", lista);
+		}
+
+		return lista;
+	}
 
 	@RequestMapping("/actualizarCantidad")
 	@ResponseBody
-	public void actualizarCantidad(@RequestParam("codigo") int cod, @RequestParam("cantidad") int can, HttpSession session) {
-	    List<Detalle> lista = (List<Detalle>) session.getAttribute("data");
-	    
-	    if (lista != null) {
-	        for (Detalle det : lista) {
-	            if (det.getCodigo() == cod) {
-	                det.setCantidad(can);
-	                break;
-	            }
-	        }
-	    }
+	public void actualizarCantidad(@RequestParam("codigo") int cod, @RequestParam("cantidad") int can,
+			HttpSession session) {
+		List<Detalle> lista = (List<Detalle>) session.getAttribute("data");
+
+		if (lista != null) {
+			for (Detalle det : lista) {
+				if (det.getCodigo() == cod) {
+					det.setCantidad(can);
+					break;
+				}
+			}
+		}
 	}
 
-	
 	@RequestMapping("/listaDetalles")
 	@ResponseBody
 	public List<Detalle> listaDetalles(HttpSession session) {
@@ -168,69 +183,100 @@ public class BoletaController {
 	}
 
 	@RequestMapping("/grabar")
-
-	public String grabar(@RequestParam("cliente") String clie, @RequestParam("fecha") String fec,
-			@SessionAttribute("CODIGO_USUARIO") int cod, HttpSession session) {
+	public String grabar(HttpSession session, RedirectAttributes redirectAttributes,
+			@SessionAttribute("codigoUsuario") int codigoUsuario) {
 		try {
+			// Crear objeto de la clase Boleta
+			Boleta boleta = new Boleta();
+			// Setear los valores de la boleta definidos en el controlador
+			boleta.setNumeroBoleta(1); // Reemplazar con el valor correspondiente
+			boleta.setFechaEmision(new Date()); // Reemplazar con el valor correspondiente
+			boleta.setMonto(1000.0); // Reemplazar con el valor correspondiente
 
-			// crear objeto de la entidadboleta
-			Boleta bol = new Boleta();
-			// setear bol
-			bol.setMonto(155.66);
-			bol.setFechaEmision(new SimpleDateFormat("yyyy-MM-dd").parse(fec));
-			// crear objeto de la entidad usuario
-			Usuario u = new Usuario();
+			// Obtener el cliente (por ejemplo, desde un formulario o base de datos)
+			Cliente cliente = serCliente.buscarPorId(1); // Reemplazar con tu lógica para obtener el cliente
 
-			u.setCodigo(cod);
-			// adicioar
-			bol.setUsuario(u);
-			// separa el valor de clie
-			// parametro clie
-			String sep[] = clie.split("-");
-			// crear usuario
-			Cliente c = new Cliente();
+			boleta.setCliente(cliente); // Asignar el cliente a la boleta
+			boleta.setUsuario(new Usuario(codigoUsuario));
 
-			c.setCodigo(Integer.parseInt(sep[0]));
+			// Obtener la lista de detalles de la sesión
+			List<Detalle> detalles = (List<Detalle>) session.getAttribute("data");
 
-			bol.setCliente(c);
-
-			// DETALLE
-			// "crear un arreglo de objetos de la entidad MedicamentoHasBoleta
-			List<ProductoHasBoleta> lista = new ArrayList<ProductoHasBoleta>();
-
-			// recuperar de tipo sesion data
-			List<Detalle> datos = (List<Detalle>) session.getAttribute("data");
-
-			// bucle para realizar recorrido sobre datos
-			for (Detalle det : datos) {
-				// crear objeto de la entidad medicamentohasboleta
-				ProductoHasBoleta mhb = new ProductoHasBoleta();
-
-				// crear objeto de la entidad medicamento
-				Producto m = new Producto();
-
-				// setera m
-				m.setCodigo(det.getCodigo());
-				// enviar objeto m al objeto mhb
-				mhb.setProducto(m);
-				mhb.setPrecio(det.getPrecio());
-
-				// enviar el objeto del arreglo lista
-				lista.add(mhb);
+			// Validar que la lista de detalles no sea nula o esté vacía
+			if (detalles == null || detalles.isEmpty()) {
+				throw new IllegalArgumentException("No se han agregado detalles a la boleta");
 			}
 
-			// emviar el arreglo "" al atributo listaMedicamentoHasBoleta
-			bol.setListaProductoHasBoleta(lista);
-			//
-			serBoleta.registrar(bol);
+			// Setear la lista de detalles en la boleta
+			boleta.setListaProductoHasBoleta(convertirDetalles(detalles));
 
+			// Llamar al servicio para registrar la boleta
+			serBoleta.registrar(boleta);
+
+			// Limpiar la lista de detalles de la sesión
+			session.removeAttribute("data");
+
+			return "redirect:/boleta/lista"; // Redireccionar a la página de lista de boletas
+		} catch (Exception e) {
+			e.printStackTrace();
+			redirectAttributes.addFlashAttribute("error", "No se pudo efectuar el proceso. Inténtelo nuevamente.");
+			return "redirect:/boleta/lista"; // Redireccionar a la página de lista de boletas
+		}
+	}
+
+	private List<ProductoHasBoleta> convertirDetalles(List<Detalle> detalles) {
+		List<ProductoHasBoleta> productosHasBoleta = new ArrayList<>();
+
+		for (Detalle detalle : detalles) {
+			ProductoHasBoleta productoHasBoleta = new ProductoHasBoleta();
+			Producto producto = new Producto();
+
+			// Setear los valores del productoHasBoleta con los valores del detalle
+			productoHasBoleta.setPrecio(detalle.getPrecio());
+			productoHasBoleta.setCantidad(detalle.getCantidad());
+
+			// Setear los valores del producto con los valores del detalle
+			producto.setCodigo(detalle.getCodigo());
+			producto.setNombre(detalle.getDescripcion());
+
+			productoHasBoleta.setProducto(producto);
+
+			productosHasBoleta.add(productoHasBoleta);
+		}
+
+		return productosHasBoleta;
+	}
+
+
+	@RequestMapping("/boletass")
+	@ResponseBody
+	public List<Object[]> getBoletaDetailsByNumeroBoleta(@RequestParam("codigo") int numBoleta) {
+		return serBoleta.getBoletaDetailsByNumeroBoleta(numBoleta);
+	}
+
+	@RequestMapping("/boletas")
+	public void boletasporNumero(HttpServletResponse response) {
+		try {
+			// invocar al método listarTodos
+			List<Object[]> lista = serBoleta.getBoletaDetailsByNumeroBoleta(1);
+			// acceder al reporte "reporteMedicamento.jrxml"
+			File file = ResourceUtils.getFile("classpath:BoletaReporte.jrxml");
+			// crear objeto de la clase JasperReport y manipular el objeto file
+			JasperReport jasper = JasperCompileManager.compileReport(file.getAbsolutePath());
+			// origen de datos "manipular lista"
+			JRBeanCollectionDataSource origen = new JRBeanCollectionDataSource(lista);
+			// crear reporte
+			JasperPrint jasperPrint = JasperFillManager.fillReport(jasper, null, origen);
+			// salida del reporte en formato PDF
+			response.setContentType("application/pdf");
+			//
+			OutputStream salida = response.getOutputStream();
+			// exportar a pdf
+			JasperExportManager.exportReportToPdfStream(jasperPrint, salida);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
-		return "redirect:/boleta/lista";
-
 	}
 	
-
+	
 }

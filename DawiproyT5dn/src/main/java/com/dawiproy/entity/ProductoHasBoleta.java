@@ -1,25 +1,28 @@
 package com.dawiproy.entity;
+
 import java.io.Serializable;
 import jakarta.persistence.*;
 
 @Entity
 @Table(name = "tb_producto_has_boleta")
-public class ProductoHasBoleta implements Serializable{
+public class ProductoHasBoleta implements Serializable {
 	@EmbeddedId
 	private ProductoHasBoletaPK pk;
-	
-	//Relación MUCHOS  a UNO "Medicamento"
+
 	@ManyToOne
-	@JoinColumn(name="id_producto",referencedColumnName = "id_producto",insertable = false,updatable =false)
-	private Producto producto;//ASOCI.
-	
-	//Relación MUCHOS  a UNO "Boleta"
+	@JoinColumn(name = "id_producto", referencedColumnName = "id_producto", insertable = false, updatable = false)
+	private Producto producto;// ASOCI.
+
+	// Relación MUCHOS a UNO "Boleta"
 	@ManyToOne
-	@JoinColumn(name="num_bol",referencedColumnName = "num_bol",insertable = false,updatable =false)
-	private Boleta boleta;//ASOCI.
-	
+	@JoinColumn(name = "num_bol", referencedColumnName = "num_bol", insertable = false, updatable = false)
+	private Boleta boleta;// ASOCI.
+
 	@Column(name = "precio")
 	private double precio;
+
+	@Column(name = "cantidad")
+	private int cantidad;
 
 	public ProductoHasBoletaPK getPk() {
 		return pk;
@@ -53,8 +56,22 @@ public class ProductoHasBoleta implements Serializable{
 		this.precio = precio;
 	}
 
-	
-	
-	
-	
+	public int getCantidad() {
+		return cantidad;
+	}
+
+	public void setCantidad(int cantidad) {
+		this.cantidad = cantidad;
+	}
+
+	private String codigo;
+
+	public String getCodigo() {
+		return codigo;
+	}
+
+	public void setCodigo(String codigo) {
+		this.codigo = codigo;
+	}
+
 }

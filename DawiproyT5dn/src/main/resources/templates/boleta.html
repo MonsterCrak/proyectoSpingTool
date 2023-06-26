@@ -61,75 +61,47 @@
 
 	<div th:insert="plantilla/UITemplate :: menu"></div>
 
-	<!--Modal eliminar detalle-->
-	<div class="modal" id="modal-confirmacion" tabindex="-1">
-		<div class="modal-dialog">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h5 class="modal-title">Confirmación de eliminación</h5>
-					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-				</div>
-				<div class="modal-body">
-					<p>¿Seguro de eliminar el detalle?</p>
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-danger" id="btn-confirmar-eliminar">Sí</button>
-					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
-				</div>
-			</div>
-		</div>
-	</div>
-
-	<!--Modal eliminar detalle fin-->
 
 
-	<!--Modal actualizar detalle-->
-	<div class="modal" id="modal-confirmacion-modificar" tabindex="-1">
-		<div class="modal-dialog">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h5 class="modal-title">Confirmación de modificación</h5>
-					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-				</div>
-				<div class="modal-body">
-					<p>El producto ya existe en el detalle. ¿Desea modificar la cantidad?</p>
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-primary" id="btn-confirmar-modificar">Sí</button>
-					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
-				</div>
-			</div>
-		</div>
-	</div>
 
-	<!--Modal actualizar detalle fin-->
 
 	<!-- Otro contenido HTML aquí -->
 
-	<!-- Modal de error -->
-	<div class="modal fade" id="errorModal" tabindex="-1" aria-labelledby="errorModalLabel" aria-hidden="true">
-		<div class="modal-dialog">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h5 class="modal-title" id="errorModalLabel">Error</h5>
-					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-				</div>
-				<div class="modal-body">
-					<p>El producto ya ha sido agregado.</p>
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-				</div>
-			</div>
-		</div>
+	<br />
+	<br />
+	
+	<div class="container" style="margin: auto;">
+		<!-- Button trigger modal -->
+		<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+			Nueva Boleta
+		</button>
+
+<br />
+<br />
+		<table id="boletaTable" class="table table-striped mt-4">
+			<thead>
+				<tr>
+					<th>Número de Boleta</th>
+					<th>Emisión</th>
+					<th>Monto Total</th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="row:${boletas}">
+					<td th:text="${row.numeroBoleta}"></td>
+					<td th:text="${row.fechaEmision}"></td>
+					<td th:text="${row.monto}"></td>
+					<td>
+						<i class="fa-regular fa-file-pdf" style="font-size: 24px; color: red;"></i>
+
+
+					</td>
+				</tr>
+			</tbody>
+		</table>
 	</div>
 
-
-
-	<!-- Button trigger modal -->
-	<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-		Nueva Boleta
-	</button>
 
 	<!-- Modal -->
 	<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -229,7 +201,7 @@
 											</tr>
 										</thead>
 										<tbody>
-										
+
 										</tbody>
 									</table>
 								</fieldset>
@@ -286,7 +258,8 @@
 							</div>
 						</div>
 						<div class="modal-footer">
-							<button type="submit" class="btn btn-primary"><i class="fas fa-save"></i></button>
+							<button id="btnGrabar" type="submit" class="btn btn-primary"><i
+									class="fas fa-save"></i></button>
 							<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
 						</div>
 					</form>
@@ -312,6 +285,16 @@
 		<script>
 			$("#tableClientes").DataTable({
 				"searching": false,
+				"lengthChange": false,
+				"pageLength": 5,
+				"info": false,
+				"language": {
+					"url": "//cdn.datatables.net/plug-ins/1.10.25/i18n/Spanish.json" // Ruta del archivo de traducción en español
+				}
+			});
+			
+			$("#boletaTable").DataTable({
+				"searching": true,
 				"lengthChange": false,
 				"pageLength": 5,
 				"info": false,
@@ -460,6 +443,8 @@
 				} else {
 					// El producto no está en la tabla de detalles, agregarlo normalmente
 					agregarProducto(cod, des, pre, can);
+
+
 				}
 			});
 
@@ -615,6 +600,23 @@
 				obtenerDetalles();
 
 			});
+
+
+			// Esperar a que el documento se cargue completamente
+			document.addEventListener("DOMContentLoaded", function () {
+				// Obtener la referencia al elemento txtCliente
+				var txtCliente = document.getElementById("txtCliente");
+
+				// Verificar si el elemento existe
+				if (txtCliente !== null) {
+					// Acceder al valor de txtCliente de manera segura aquí
+					console.log(txtCliente.value);
+				} else {
+					// Manejar el caso cuando txtCliente no existe
+					console.log("El elemento txtCliente no existe");
+				}
+			});
+
 
 
 

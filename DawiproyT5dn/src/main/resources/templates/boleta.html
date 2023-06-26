@@ -8,12 +8,7 @@
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet"
 		integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
 	<style>
-		body {
-			font-family: verdana;
-			font-size: 12px;
-		}
-
-		.modal-header,
+		
 		h4,
 		.close {
 			background-color: #286090;
@@ -22,32 +17,124 @@
 			font-size: 20px;
 		}
 
+		.help-block {
+			color: red;
+			/*display: none;*/
+		}
+
+		.form-group.has-error .form-control-label {
+			color: red;
+		}
+
+		.form-group.has-error .form-control {
+			border: 1px solid red;
+			box-shadow: 0 0 0 0.2rem rgba(250, 16, 0, 0.18);
+		}
+
+		.alertify .ajs-dialog {
+			top: 50%;
+			transform: translateY(-50%);
+			margin: auto;
+		}
+
+		.ajs-header {
+			background-color: #286090 !important;
+			color: white !important;
+			/*text-align: center;*/
+			font-size: 18px;
+			font-weight: bold;
+		}
+
+		.ajs-ok {
+			color: #fff;
+			background-color: #007bff;
+			border-color: #007bff;
+		}
+
+		.ajs-cancel {
+			color: #fff;
+			background-color: #dc3545;
+			border-color: #dc3545;
+		}
+
+		.btn-primary {
+			background-color: #286090 !important;
+		}
+
+		.dataTables_length,
+		.dataTables_info {
+			display: none;
+		}
+
+		
+
+		.form-control-feedback2 {
+			margin: 1px;
+			position: absolute;
+			padding: 10px;
+			pointer-events: none;
+			background-color: #e9ecef;
+			border-style: none;
+		}
+
+		.form-control-feedback3 {
+			margin: 1px;
+			position: absolute;
+			margin-left: 225px;
+			padding: 10px;
+			pointer-events: none;
+			background-color: #e9ecef;
+			border-style: none;
+		}
+
 		.form-control {
-			height: 30px !important;
-			/*padding-left: 40px!important;*/
+			padding-left: 40px !important;
 		}
 
-		fieldset,
-		legend {
-			all: revert;
+		.navbar-nav {
+			display: flex;
+			align-items: center;
 		}
 
-		.reset {
-			all: revert;
+		.nav-item {
+			margin: 0 10px;
 		}
 
-		.btn-danger {
-			margin: 0px !important;
-			height: 30px !important;
-			padding-top: 3px !important;
+		.nav-link {
+			text-align: center;
+			color: #fff;
+			/* Otros estilos que desees aplicar */
+			transition: opacity 0.3s ease;
 		}
 
-		.colorBloqueado {
-			background: #F7EEC5;
+		.nav-link:hover {
+			opacity: 0.7;
 		}
 
-		.form-control:focus {
-			background: #F7EEC5;
+		.btn-custom {
+			background-color: transparent;
+			border: 2px solid black;
+			color: black;
+			transition: background-color 0.3s, color 0.3s;
+		}
+
+		.btn-custom:hover {
+			background-color: #948279;
+			color: white;
+		}
+
+		.custom-link {
+			text-decoration: none;
+			border: none;
+			background-color: transparent;
+			color: black;
+			border-radius: 10px;
+			transition: background-color 0.3s, color 0.3s;
+		}
+
+		.custom-link:hover {
+			background-color: #948279;
+			color: white;
 		}
 	</style>
 	<script src="https://kit.fontawesome.com/1da5200486.js" crossorigin="anonymous"></script>
@@ -69,15 +156,15 @@
 
 	<br />
 	<br />
-	
+
 	<div class="container" style="margin: auto;">
 		<!-- Button trigger modal -->
 		<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
 			Nueva Boleta
 		</button>
 
-<br />
-<br />
+		<br />
+		<br />
 		<table id="boletaTable" class="table table-striped mt-4">
 			<thead>
 				<tr>
@@ -85,6 +172,7 @@
 					<th>Emisión</th>
 					<th>Monto Total</th>
 					<th></th>
+
 				</tr>
 			</thead>
 			<tbody>
@@ -93,7 +181,9 @@
 					<td th:text="${row.fechaEmision}"></td>
 					<td th:text="${row.monto}"></td>
 					<td>
+
 						<i class="fa-regular fa-file-pdf" style="font-size: 24px; color: red;"></i>
+
 
 
 					</td>
@@ -103,9 +193,11 @@
 	</div>
 
 
+
+	<!-- Modal -->
 	<!-- Modal -->
 	<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-		<div class="modal-dialog modal-xl">
+		<div class="modal-dialog modal-xl modal-dialog-scrollable">
 			<div class="modal-content">
 				<div class="modal-header">
 					<h1 class="modal-title fs-5" id="exampleModalLabel">Boleta</h1>
@@ -113,103 +205,103 @@
 				<div class="modal-body">
 					<form method="post" th:action="@{/boleta/grabar}">
 						<div class="row">
-							<div class="col-3">
+							<div class="col-4">
 								<label for="inputPassword6" class="col-form-label">Número</label>
 								<input type="text" class="form-control colorBloqueado" name="numero" readonly
 									th:value="${codigoBoleta}">
 							</div>
-							<div class="col-3">
+							<div class="col-4">
 								<label for="inputPassword6" class="col-form-label">Cliente</label>
 								<input type="text" class="form-control colorBloqueado" name="cliente" id="id-cliente"
 									readonly>
 							</div>
-							<div class="col-3">
+							<div class="col-4">
 								<label for="inputPassword6" class="col-form-label">Fecha</label>
 								<input type="date" class="form-control" name="fecha">
 							</div>
-
 						</div>
-						<hr />
-
+						<hr>
 						<div class="row mt-3">
 							<div class="col-lg-6">
-								<fieldset class="reset">
-									<legend class="reset">Consulta Cliente</legend>
-									<div class="row mt-3">
-										<label for="inputEmail3" class="col-sm-2">Cliente</label>
-										<div class="col-sm-4">
-											<input type="text" class="form-control" id="txtCliente">
-										</div>
-										<div class="col-sm-6">
-											<button type="button" class="btn btn-info" id="btn-buscar-cliente">
-												<i class="fas fa-search"></i>
-
-											</button>
-										</div>
+								<div class="card">
+									<div class="card-header">
+										<h5 class="card-title">Consulta Cliente</h5>
 									</div>
-									<table id="tableClientes" class="table table-striped mt-4" style="width:100%">
-										<thead>
-											<tr>
-												<th>Código</th>
-												<th>Nombre</th>
-												<th>Paterno</th>
-												<th>Matero</th>
-												<th></th>
-											</tr>
-										</thead>
-										<tbody>
-											<tr th:each="row:${clientes}">
-												<td th:text="${row.codigo}"></td>
-												<td th:text="${row.nombre}"></td>
-												<td th:text="${row.paterno}"></td>
-												<td th:text="${row.materno}"></td>
-												<td>
-													<button type="button" class="btn btn-warning btn-datos-cliente">
-														<i class="fas fa-user-plus"></i>
-													</button>
-												</td>
-											</tr>
-
-										</tbody>
-									</table>
-								</fieldset>
+									<div class="card-body">
+										<div class="row mt-3">
+											<label for="inputEmail3" class="col-sm-3">Cliente</label>
+											<div class="col-sm-6">
+												<input type="text" class="form-control" id="txtCliente">
+											</div>
+											<div class="col-sm-3">
+												<button type="button" class="btn btn-info" id="btn-buscar-cliente">
+													<i class="fas fa-search"></i>
+												</button>
+											</div>
+										</div>
+										<table id="tableClientes" class="table table-striped mt-4" style="width:100%">
+											<thead>
+												<tr>
+													<th>Código</th>
+													<th>Nombre</th>
+													<th>Paterno</th>
+													<th>Materno</th>
+													<th></th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr th:each="row:${clientes}">
+													<td th:text="${row.codigo}"></td>
+													<td th:text="${row.nombre}"></td>
+													<td th:text="${row.paterno}"></td>
+													<td th:text="${row.materno}"></td>
+													<td>
+														<button type="button" class="btn btn-warning btn-datos-cliente">
+															<i class="fas fa-user-plus"></i>
+														</button>
+													</td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+								</div>
 							</div>
 							<div class="col-lg-6">
-								<fieldset class="reset">
-									<legend class="reset">Consulta Producto</legend>
-									<div class="row mt-3">
-										<label for="inputEmail3" class="col-sm-2">Producto</label>
-										<div class="col-sm-4">
-											<input type="text" class="form-control" id="txtProducto">
-										</div>
-										<div class="col-sm-4">
-											<button type="button" class="btn btn-success" id="btn-buscar-producto">
-												<i class="fas fa-search"></i>
-
-											</button>
-										</div>
-
+								<div class="card">
+									<div class="card-header">
+										<h5 class="card-title">Consulta Producto</h5>
 									</div>
-									<table id="tableProducto" class="table table-striped mt-4" style="width:100%">
-										<thead>
-											<tr>
-												<th>Código</th>
-												<th>Nombre</th>
-												<th>Precio</th>
-
-												<th></th>
-											</tr>
-										</thead>
-										<tbody>
-
-										</tbody>
-									</table>
-								</fieldset>
+									<div class="card-body">
+										<div class="row mt-3">
+											<label for="inputEmail3" class="col-sm-3">Producto</label>
+											<div class="col-sm-6">
+												<input type="text" class="form-control" id="txtProducto">
+											</div>
+											<div class="col-sm-3">
+												<button type="button" class="btn btn-success" id="btn-buscar-producto">
+													<i class="fas fa-search"></i>
+												</button>
+											</div>
+										</div>
+										<table id="tableProducto" class="table table-striped mt-4" style="width:100%">
+											<thead>
+												<tr>
+													<th>Código</th>
+													<th>Nombre</th>
+													<th>Precio</th>
+													<th></th>
+												</tr>
+											</thead>
+											<tbody>
+											</tbody>
+										</table>
+									</div>
+								</div>
 							</div>
 						</div>
 						<hr>
 						<div class="row">
-							<div class="col-md-7">
+							<div class="col-md-8">
 								<table id="tableDetalle" class="table table-striped" style="width:100%">
 									<thead>
 										<tr>
@@ -223,105 +315,117 @@
 									</thead>
 									<tbody>
 										<tr>
-
 										</tr>
 									</tbody>
 								</table>
 							</div>
-							<div class="col-lg-5 my-3">
-								<div class="row">
-									<div class="col-md-3">
-										<label for="inputEmail3">Código</label>
-										<input type="text" class="form-control colorBloqueado" id="id-codigo" readonly>
+							<div class="col-lg-4 my-3">
+								<div class="card">
+									<div class="card-header">
+										<h5 class="card-title">Detalle del Producto</h5>
 									</div>
-									<div class="col-md-6">
-										<label for="inputEmail3">Descripción</label>
-										<input type="text" class="form-control colorBloqueado" id="id-descripcion"
-											readonly>
-									</div>
-									<div class="col-md-3">
-										<label for="inputEmail3">Precio</label>
-										<input type="text" class="form-control colorBloqueado" id="id-precio" readonly>
-									</div>
-								</div>
-								<div class="row mt-3">
-									<div class="col-md-3">
-										<label for="inputEmail3">Cantidad</label>
-										<input type="text" class="form-control colorBloqueado" id="id-cantidad">
-									</div>
-									<div class="col-md-9 mt-2">
-										<button type="button" class="btn btn-warning" id="btn-adicionar">
-											<i class="fas fa-plus-square"></i> Adicionar
-										</button>
+									<div class="card-body">
+										<div class="row">
+											<div class="col-md-4">
+												<label for="inputEmail3">Código</label>
+												<input type="text" class="form-control colorBloqueado" id="id-codigo"
+													readonly>
+											</div>
+											<div class="col-md-8">
+												<label for="inputEmail3">Descripción</label>
+												<input type="text" class="form-control colorBloqueado"
+													id="id-descripcion" readonly>
+											</div>
+										</div>
+										<div class="row mt-3">
+											<div class="col-md-6">
+												<label for="inputEmail3">Precio</label>
+												<input type="text" class="form-control colorBloqueado" id="id-precio"
+													readonly>
+											</div>
+											<div class="col-md-6">
+												<label for="inputEmail3">Cantidad</label>
+												<input type="text" class="form-control colorBloqueado" id="id-cantidad">
+											</div>
+										</div>
+										<div class="row mt-3">
+											<div class="col-md-12">
+												<button type="button" class="btn btn-warning" id="btn-adicionar">
+													<i class="fas fa-plus-square"></i> Adicionar
+												</button>
+											</div>
+										</div>
 									</div>
 								</div>
 							</div>
 						</div>
 						<div class="modal-footer">
-							<button id="btnGrabar" type="submit" class="btn btn-primary"><i
-									class="fas fa-save"></i></button>
-							<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+							<button id="btnGrabar" type="submit" class="btn btn-primary">
+								<i class="fas fa-save"></i>
+							</button>
+							<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
 						</div>
 					</form>
 				</div>
 			</div>
 		</div>
+	</div>
 
 
 
-		<!-- ALERTAS PERSONALIZADAS -->
-		<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+	<!-- ALERTAS PERSONALIZADAS -->
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
-			integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
-			crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+		integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
+		crossorigin="anonymous"></script>
 
-		<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
-		<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
-		<script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
+	<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+	<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+	<script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
 
 
 
-		<script>
-			$("#tableClientes").DataTable({
-				"searching": false,
-				"lengthChange": false,
-				"pageLength": 5,
-				"info": false,
-				"language": {
-					"url": "//cdn.datatables.net/plug-ins/1.10.25/i18n/Spanish.json" // Ruta del archivo de traducción en español
-				}
-			});
-			
-			$("#boletaTable").DataTable({
-				"searching": true,
-				"lengthChange": false,
-				"pageLength": 5,
-				"info": false,
-				"language": {
-					"url": "//cdn.datatables.net/plug-ins/1.10.25/i18n/Spanish.json" // Ruta del archivo de traducción en español
-				}
-			});
+	<script>
+		$("#tableClientes").DataTable({
+			"searching": false,
+			"lengthChange": false,
+			"pageLength": 5,
+			"info": false,
+			"language": {
+				"url": "//cdn.datatables.net/plug-ins/1.10.25/i18n/Spanish.json" // Ruta del archivo de traducción en español
+			}
+		});
 
-			// Configuración de la tabla de productos
-			$("#tableProducto").DataTable({
-				"searching": false,
-				"lengthChange": false,
-				"pageLength": 5,
-				"info": false,
-				"language": {
-					"url": "//cdn.datatables.net/plug-ins/1.10.25/i18n/Spanish.json" // Ruta del archivo de traducción en español
-				}
-			});
-			$(document).on("click", "#btn-buscar-cliente", function () {
-				let ape = $("#txtCliente").val()
-				//reorganizar tabla
-				$("#tableClientes").DataTable().destroy();
-				$("#tableClientes tbody").empty();
-				$.get("/boleta/listaJSON?apellido=" + ape, function (response) {
-					//bucle
-					$.each(response, function (index, item) {
-						$("#tableClientes tbody").append(`<tr><td>${item.codigo}</td><td>
+		$("#boletaTable").DataTable({
+			"searching": true,
+			"lengthChange": false,
+			"pageLength": 5,
+			"info": false,
+			"language": {
+				"url": "//cdn.datatables.net/plug-ins/1.10.25/i18n/Spanish.json" // Ruta del archivo de traducción en español
+			}
+		});
+
+		// Configuración de la tabla de productos
+		$("#tableProducto").DataTable({
+			"searching": false,
+			"lengthChange": false,
+			"pageLength": 5,
+			"info": false,
+			"language": {
+				"url": "//cdn.datatables.net/plug-ins/1.10.25/i18n/Spanish.json" // Ruta del archivo de traducción en español
+			}
+		});
+		$(document).on("click", "#btn-buscar-cliente", function () {
+			let ape = $("#txtCliente").val()
+			//reorganizar tabla
+			$("#tableClientes").DataTable().destroy();
+			$("#tableClientes tbody").empty();
+			$.get("/boleta/listaJSON?apellido=" + ape, function (response) {
+				//bucle
+				$.each(response, function (index, item) {
+					$("#tableClientes tbody").append(`<tr><td>${item.codigo}</td><td>
 																 ${item.nombre}</td><td>
 																 ${item.paterno}</td><td>
 																 ${item.materno}</td><td>
@@ -329,136 +433,136 @@
 														<i class="fas fa-user-plus"></i>
 													</button>	 	 	 
 					`)
-					})
-					$("#tableClientes").DataTable({
-						"searching": false,
-						"lengthChange": false,
-						"pageLength": 5,
-						"info": false,
-						"language": {
-							"url": "//cdn.datatables.net/plug-ins/1.10.25/i18n/Spanish.json" // Ruta del archivo de traducción en español
-						}
-					});
 				})
-
+				$("#tableClientes").DataTable({
+					"searching": false,
+					"lengthChange": false,
+					"pageLength": 5,
+					"info": false,
+					"language": {
+						"url": "//cdn.datatables.net/plug-ins/1.10.25/i18n/Spanish.json" // Ruta del archivo de traducción en español
+					}
+				});
 			})
-			$(document).on("click", "#btn-buscar-producto", function () {
-				let nom = $("#txtProducto").val()
-				$("#tableProducto").DataTable().destroy();
-				$("#tableProducto tbody").empty();
-				$.get("/boleta/listaProductoJSON?nombre=" + nom, function (response) {
-					$.each(response, function (index, item) {
-						$("#tableProducto tbody").append(`<tr><td>${item.codigo}</td><td>
+
+		})
+		$(document).on("click", "#btn-buscar-producto", function () {
+			let nom = $("#txtProducto").val()
+			$("#tableProducto").DataTable().destroy();
+			$("#tableProducto tbody").empty();
+			$.get("/boleta/listaProductoJSON?nombre=" + nom, function (response) {
+				$.each(response, function (index, item) {
+					$("#tableProducto tbody").append(`<tr><td>${item.codigo}</td><td>
 																 ${item.nombre}</td><td>
 																 ${item.precio}</td><td>
 													<button type="button" class="btn btn-warning btn-datos-producto">
 														<i class="fas fa-laptop-medical"></i>
 													</button>	 	 	 
 					`);
-					})
-					$("#tableProducto").DataTable({
-						"searching": false,
-						"lengthChange": false,
-						"pageLength": 5,
-						"info": false,
-						"language": {
-							"url": "//cdn.datatables.net/plug-ins/1.10.25/i18n/Spanish.json" // Ruta del archivo de traducción en español
-						}
-					});
 				})
-			})
-
-
-
-
-
-
-			$(document).on("click", ".btn-datos-cliente", function () {
-
-				let cod, nom, pat, mat;
-				cod = $(this).parents("tr").find("td")[0].innerHTML;
-				nom = $(this).parents("tr").find("td")[1].innerHTML;
-				pat = $(this).parents("tr").find("td")[2].innerHTML;
-				mat = $(this).parents("tr").find("td")[3].innerHTML;
-
-				$("#id-cliente").val(cod + "-" + pat.trim() + " " + mat.trim() + " " + nom.trim());
-
-			})
-
-
-
-
-			$(document).on("click", ".btn-datos-producto", function () {
-
-				let cod, nom, pre;
-				cod = $(this).parents("tr").find("td")[0].innerHTML;
-				nom = $(this).parents("tr").find("td")[1].innerHTML;
-				pre = $(this).parents("tr").find("td")[2].innerHTML;
-
-				$("#id-codigo").val(cod);
-				$("#id-descripcion").val(nom.trim());
-				$("#id-precio").val(pre.trim());
-
-			})
-
-
-
-
-
-			//
-			$(document).on("click", "#btn-adicionar", function () {
-				let cod, des, pre, can;
-				cod = $("#id-codigo").val();
-				des = $("#id-descripcion").val();
-				pre = $("#id-precio").val();
-				can = $("#id-cantidad").val();
-
-				// Verificar si el producto ya está en la tabla de detalles
-				const existeProducto = $("#tableDetalle tbody tr").toArray().some(function (fila) {
-					const codigo = $(fila).find("td:first").text();
-					return codigo === cod;
+				$("#tableProducto").DataTable({
+					"searching": false,
+					"lengthChange": false,
+					"pageLength": 5,
+					"info": false,
+					"language": {
+						"url": "//cdn.datatables.net/plug-ins/1.10.25/i18n/Spanish.json" // Ruta del archivo de traducción en español
+					}
 				});
-
-				if (existeProducto) {
-					// Mostrar el confirm dialog
-					Swal.fire({
-						title: "Producto existente",
-						text: "El producto ya ha sido agregado a la lista. ¿Deseas actualizar la cantidad?",
-						icon: "question",
-						showCancelButton: true,
-						confirmButtonText: "Sí",
-						cancelButtonText: "No",
-					}).then((result) => {
-						if (result.isConfirmed) {
-							actualizarCantidad(cod, can);
-						} else {
-							// Mostrar el alert de producto existente
-							Swal.fire({
-								title: "Producto existente",
-								text: "El producto ya ha sido agregado a la lista.",
-								icon: "info",
-							});
-						}
-					});
-				} else {
-					// El producto no está en la tabla de detalles, agregarlo normalmente
-					agregarProducto(cod, des, pre, can);
+			})
+		})
 
 
-				}
+
+
+
+
+		$(document).on("click", ".btn-datos-cliente", function () {
+
+			let cod, nom, pat, mat;
+			cod = $(this).parents("tr").find("td")[0].innerHTML;
+			nom = $(this).parents("tr").find("td")[1].innerHTML;
+			pat = $(this).parents("tr").find("td")[2].innerHTML;
+			mat = $(this).parents("tr").find("td")[3].innerHTML;
+
+			$("#id-cliente").val(cod + "-" + pat.trim() + " " + mat.trim() + " " + nom.trim());
+
+		})
+
+
+
+
+		$(document).on("click", ".btn-datos-producto", function () {
+
+			let cod, nom, pre;
+			cod = $(this).parents("tr").find("td")[0].innerHTML;
+			nom = $(this).parents("tr").find("td")[1].innerHTML;
+			pre = $(this).parents("tr").find("td")[2].innerHTML;
+
+			$("#id-codigo").val(cod);
+			$("#id-descripcion").val(nom.trim());
+			$("#id-precio").val(pre.trim());
+
+		})
+
+
+
+
+
+		//
+		$(document).on("click", "#btn-adicionar", function () {
+			let cod, des, pre, can;
+			cod = $("#id-codigo").val();
+			des = $("#id-descripcion").val();
+			pre = $("#id-precio").val();
+			can = $("#id-cantidad").val();
+
+			// Verificar si el producto ya está en la tabla de detalles
+			const existeProducto = $("#tableDetalle tbody tr").toArray().some(function (fila) {
+				const codigo = $(fila).find("td:first").text();
+				return codigo === cod;
 			});
 
-			function agregarProducto(cod, des, pre, can) {
-				const boton = `<button type="button" class="btn btn-danger">
+			if (existeProducto) {
+				// Mostrar el confirm dialog
+				Swal.fire({
+					title: "Producto existente",
+					text: "El producto ya ha sido agregado a la lista. ¿Deseas actualizar la cantidad?",
+					icon: "question",
+					showCancelButton: true,
+					confirmButtonText: "Sí",
+					cancelButtonText: "No",
+				}).then((result) => {
+					if (result.isConfirmed) {
+						actualizarCantidad(cod, can);
+					} else {
+						// Mostrar el alert de producto existente
+						Swal.fire({
+							title: "Producto existente",
+							text: "El producto ya ha sido agregado a la lista.",
+							icon: "info",
+						});
+					}
+				});
+			} else {
+				// El producto no está en la tabla de detalles, agregarlo normalmente
+				agregarProducto(cod, des, pre, can);
+
+
+			}
+		});
+
+		function agregarProducto(cod, des, pre, can) {
+			const boton = `<button type="button" class="btn btn-danger">
         <i class="fas fa-trash-alt btn-eliminar"></i>
     </button>`;
 
-				$.get("/boleta/adicionar?codigo=" + cod + "&descripcion=" + des + "&precio=" + pre + "&cantidad=" + can, function (response) {
-					$("#tableDetalle tbody").empty();
-					$.each(response, function (index, item) {
-						// Formateo el importe para que no lance muchos decimales
-						const importeFormateado = item.importe.toFixed(2);
-						$("#tableDetalle tbody").append(`<tr>
+			$.get("/boleta/adicionar?codigo=" + cod + "&descripcion=" + des + "&precio=" + pre + "&cantidad=" + can, function (response) {
+				$("#tableDetalle tbody").empty();
+				$.each(response, function (index, item) {
+					// Formateo el importe para que no lance muchos decimales
+					const importeFormateado = item.importe.toFixed(2);
+					$("#tableDetalle tbody").append(`<tr>
                 <td>${item.codigo}</td>
                 <td>${item.descripcion}</td>
                 <td>${item.precio}</td>
@@ -466,103 +570,103 @@
                 <td>${importeFormateado}</td>
                 <td>${boton}</td>
             </tr>`);
-					});
-
-					// Destruir la tabla antes de reinicializarla
-					if ($.fn.DataTable.isDataTable("#tableProducto")) {
-						$("#tableProducto").DataTable().destroy();
-					}
-
-					$("#tableProductos").DataTable({
-						"searching": false,
-						"lengthChange": false,
-						"pageLength": 5,
-						"info": false,
-						"language": {
-							"url": "//cdn.datatables.net/plug-ins/1.10.25/i18n/Spanish.json" // Ruta del archivo de traducción en español
-						}
-					});
 				});
-			}
 
-			function actualizarCantidad(cod, can) {
-				$.get("/boleta/actualizarCantidad?codigo=" + cod + "&cantidad=" + can, function (response) {
-					// Actualizar la cantidad en la tabla de detalles
-					$("#tableDetalle tbody tr").each(function () {
-						const codigo = $(this).find("td:first").text();
-						if (codigo === cod) {
-							$(this).find("td:eq(3)").text(can);
-						}
-					});
-				});
-			}
+				// Destruir la tabla antes de reinicializarla
+				if ($.fn.DataTable.isDataTable("#tableProducto")) {
+					$("#tableProducto").DataTable().destroy();
+				}
 
-
-
-
-			// Evento para mostrar el exampleModal después de cerrar el errorModal
-			$("#errorModal").on("hidden.bs.modal", function () {
-				$("#exampleModal").modal("show");
-			});
-
-
-
-			//
-			$(document).on("click", ".btn-eliminar", function () {
-				var fila = $(this).closest("tr");
-				var codigo = fila.find("td:first").text();
-
-				// Mostrar el alert de confirmación
-				Swal.fire({
-					title: "¿Estás seguro?",
-					text: "Esta acción eliminará el detalle. ¿Deseas continuar?",
-					icon: "warning",
-					showCancelButton: true,
-					confirmButtonText: "Sí",
-					cancelButtonText: "Cancelar",
-				}).then((result) => {
-					if (result.isConfirmed) {
-						// Enviar la solicitud AJAX para eliminar el detalle
-						$.get("/boleta/eliminar?codigo=" + codigo, function (response) {
-							// Eliminar la fila de la tabla
-							fila.remove();
-
-							// Mostrar una alerta de éxito
-							Swal.fire("Eliminado", "El detalle ha sido eliminado correctamente", "success");
-						});
+				$("#tableProductos").DataTable({
+					"searching": false,
+					"lengthChange": false,
+					"pageLength": 5,
+					"info": false,
+					"language": {
+						"url": "//cdn.datatables.net/plug-ins/1.10.25/i18n/Spanish.json" // Ruta del archivo de traducción en español
 					}
 				});
 			});
+		}
 
-			// Evento cuando el modal de confirmación se muestra
-			$("#modal-confirmacion").on("show.bs.modal", function () {
-				// Ocultar el modal principal
-				$("#exampleModal").modal("hide");
+		function actualizarCantidad(cod, can) {
+			$.get("/boleta/actualizarCantidad?codigo=" + cod + "&cantidad=" + can, function (response) {
+				// Actualizar la cantidad en la tabla de detalles
+				$("#tableDetalle tbody tr").each(function () {
+					const codigo = $(this).find("td:first").text();
+					if (codigo === cod) {
+						$(this).find("td:eq(3)").text(can);
+					}
+				});
 			});
+		}
 
-			// Evento cuando el modal de confirmación se oculta
-			$("#modal-confirmacion").on("hidden.bs.modal", function () {
-				// Mostrar el modal principal nuevamente
-				$("#exampleModal").modal("show");
+
+
+
+		// Evento para mostrar el exampleModal después de cerrar el errorModal
+		$("#errorModal").on("hidden.bs.modal", function () {
+			$("#exampleModal").modal("show");
+		});
+
+
+
+		//
+		$(document).on("click", ".btn-eliminar", function () {
+			var fila = $(this).closest("tr");
+			var codigo = fila.find("td:first").text();
+
+			// Mostrar el alert de confirmación
+			Swal.fire({
+				title: "¿Estás seguro?",
+				text: "Esta acción eliminará el detalle. ¿Deseas continuar?",
+				icon: "warning",
+				showCancelButton: true,
+				confirmButtonText: "Sí",
+				cancelButtonText: "Cancelar",
+			}).then((result) => {
+				if (result.isConfirmed) {
+					// Enviar la solicitud AJAX para eliminar el detalle
+					$.get("/boleta/eliminar?codigo=" + codigo, function (response) {
+						// Eliminar la fila de la tabla
+						fila.remove();
+
+						// Mostrar una alerta de éxito
+						Swal.fire("Eliminado", "El detalle ha sido eliminado correctamente", "success");
+					});
+				}
 			});
+		});
 
-			//
-			$(document).ready(function () {
-				var tableDetalle;
+		// Evento cuando el modal de confirmación se muestra
+		$("#modal-confirmacion").on("show.bs.modal", function () {
+			// Ocultar el modal principal
+			$("#exampleModal").modal("hide");
+		});
 
-				// Función para obtener los detalles mediante una solicitud AJAX
-				function obtenerDetalles() {
-					$.get("/boleta/listaDetalles", function (response) {
-						// Limpiar el contenido actual de la tabla
-						$("#tableDetalle tbody").empty();
+		// Evento cuando el modal de confirmación se oculta
+		$("#modal-confirmacion").on("hidden.bs.modal", function () {
+			// Mostrar el modal principal nuevamente
+			$("#exampleModal").modal("show");
+		});
 
-						// Recorrer la lista de detalles y agregar filas a la tabla
-						$.each(response, function (index, detalle) {
-							// Formatear el importe para que no lance muchos decimales
-							const importeFormateado = detalle.importe.toFixed(2);
+		//
+		$(document).ready(function () {
+			var tableDetalle;
 
-							// Crear la fila de la tabla con los datos del detalle
-							var fila = `<tr>
+			// Función para obtener los detalles mediante una solicitud AJAX
+			function obtenerDetalles() {
+				$.get("/boleta/listaDetalles", function (response) {
+					// Limpiar el contenido actual de la tabla
+					$("#tableDetalle tbody").empty();
+
+					// Recorrer la lista de detalles y agregar filas a la tabla
+					$.each(response, function (index, detalle) {
+						// Formatear el importe para que no lance muchos decimales
+						const importeFormateado = detalle.importe.toFixed(2);
+
+						// Crear la fila de la tabla con los datos del detalle
+						var fila = `<tr>
 						          <td>${detalle.codigo}</td>
 						          <td>${detalle.descripcion}</td>
 						          <td>${detalle.precio}</td>
@@ -575,54 +679,54 @@
 						          </td>
 						        </tr>`;
 
-							// Agregar la fila a la tabla
-							$("#tableDetalle tbody").append(fila);
-						});
-
-						if (tableDetalle) {
-							tableDetalle.destroy();
-						}
-
-						// Inicializar la tabla de detalles
-						$("#tableDetalle").DataTable({
-							"searching": false,
-							"lengthChange": false,
-							"pageLength": 5,
-							"info": false,
-							"language": {
-								"url": "//cdn.datatables.net/plug-ins/1.10.25/i18n/Spanish.json" // Ruta del archivo de traducción en español
-							}
-						});
+						// Agregar la fila a la tabla
+						$("#tableDetalle tbody").append(fila);
 					});
-				}
 
-				// Llamar a la función obtenerDetalles al cargar la página
-				obtenerDetalles();
+					if (tableDetalle) {
+						tableDetalle.destroy();
+					}
 
-			});
+					// Inicializar la tabla de detalles
+					$("#tableDetalle").DataTable({
+						"searching": false,
+						"lengthChange": false,
+						"pageLength": 5,
+						"info": false,
+						"language": {
+							"url": "//cdn.datatables.net/plug-ins/1.10.25/i18n/Spanish.json" // Ruta del archivo de traducción en español
+						}
+					});
+				});
+			}
 
+			// Llamar a la función obtenerDetalles al cargar la página
+			obtenerDetalles();
 
-			// Esperar a que el documento se cargue completamente
-			document.addEventListener("DOMContentLoaded", function () {
-				// Obtener la referencia al elemento txtCliente
-				var txtCliente = document.getElementById("txtCliente");
-
-				// Verificar si el elemento existe
-				if (txtCliente !== null) {
-					// Acceder al valor de txtCliente de manera segura aquí
-					console.log(txtCliente.value);
-				} else {
-					// Manejar el caso cuando txtCliente no existe
-					console.log("El elemento txtCliente no existe");
-				}
-			});
-
-
+		});
 
 
+		// Esperar a que el documento se cargue completamente
+		document.addEventListener("DOMContentLoaded", function () {
+			// Obtener la referencia al elemento txtCliente
+			var txtCliente = document.getElementById("txtCliente");
+
+			// Verificar si el elemento existe
+			if (txtCliente !== null) {
+				// Acceder al valor de txtCliente de manera segura aquí
+				console.log(txtCliente.value);
+			} else {
+				// Manejar el caso cuando txtCliente no existe
+				console.log("El elemento txtCliente no existe");
+			}
+		});
 
 
-		</script>
+
+
+
+
+	</script>
 
 
 </body>

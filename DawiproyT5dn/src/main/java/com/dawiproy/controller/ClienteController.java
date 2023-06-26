@@ -64,16 +64,20 @@ public class ClienteController {
 
 			if (cod == 0) {
 				serCliente.registrar(c);
-
+				System.out.println("Nuevo cliente registrado: " + c.toString());
 			} else {
 				c.setCodigo(cod);
 				serCliente.actualizar(c);
+				System.out.println("Cliente actualizado: " + c.toString());
 			}
 
+			return "redirect:/cliente/lista";
 		} catch (Exception e) {
 			e.printStackTrace();
+			System.out.println("Error al grabar el cliente: " + e.getMessage());
+			redirect.addFlashAttribute("error", "No se pudo grabar el cliente: " + e.getMessage());
+			return "redirect:/cliente/lista";
 		}
-		return "redirect:/cliente/lista";
 	}
 
 	@RequestMapping("/buscar")

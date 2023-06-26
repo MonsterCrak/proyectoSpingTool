@@ -29,13 +29,14 @@ public class SecurityConfig{
 
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-		
-		http.
-		authorizeHttpRequests().requestMatchers("/resources/img/**").permitAll().and().
-		authorizeHttpRequests().requestMatchers("/validar/**").permitAll().and().
-		authorizeHttpRequests().requestMatchers("/producto/**","/empleado/**","/sucursal/**","/cliente/**","/boleta/**").authenticated().and().
-		formLogin().loginPage("/validar/usuario").defaultSuccessUrl("/validar/intranet");
-		
+		http.authorizeHttpRequests().requestMatchers("/resources/img/**").permitAll().and().
+		csrf().disable().authorizeHttpRequests().
+		requestMatchers("/validar/**").permitAll().
+		and().authorizeHttpRequests().
+		requestMatchers("/producto/**","/empleado/**","/sucursal/**","/cliente/**","/boleta/**").authenticated().
+		and().formLogin().loginPage("/validar/usuario").
+		defaultSuccessUrl("/validar/intranet");
+
 		return http.build();
 	}
 
@@ -59,8 +60,6 @@ public class SecurityConfig{
 		return new BCryptPasswordEncoder();
 	}
 }
-
-
 
 
 

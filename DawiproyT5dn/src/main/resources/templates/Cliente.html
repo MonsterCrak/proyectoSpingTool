@@ -3,7 +3,7 @@
 
 <head th:insert="plantilla/UITemplate :: cabecera">
 	<meta charset="ISO-8859-1">
-	<title>Empleado</title>
+	<title>Cliente</title>
 
 </head>
 
@@ -243,75 +243,76 @@
 			});
 	</script>
 
-	 <script>
-		 
-		 $(document).on("click", "#Guardar", function () {
-    // Desactivar el botón de registro
-    $(this).prop("disabled", true);
+	<script>
 
-    // Obtener los valores de los campos de entrada
-    let codigo = $("#idCodigo").val();
-    let nombre = $("#idNombre").val();
-    let paterno = $("#idPaterno").val();
-    let materno = $("#idMaterno").val();
-    let sexo = $("#idSexo").val();
-    let dni = $("#idDni").val();
-    let fecha = $("#usr1").val();
-    let celular = $("#idCelular").val();
-    let direccion = $("#idDireccion").val();
-    let codDis = $("#idDistrito").val();
+		$(document).ready(function () {
+			$("#idRegistra").submit(function (event) {
+				// Evitar el envío del formulario por defecto
+				event.preventDefault();
 
-    // Realizar la petición POST para registrar el cliente
-    $.post("/cliente/grabar", {
-        codigo: codigo,
-        nombre: nombre,
-        paterno: paterno,
-        materno: materno,
-        sexo: sexo,
-        dni: dni,
-        fecha: fecha,
-        celular: celular,
-        direccion: direccion,
-        distritoscliente: codDis
-    })
-        .done(function () {
-            // Mostrar alerta de éxito si el registro fue exitoso
-            Swal.fire({
-                icon: 'success',
-                title: 'Cliente ' + nombre + ' grabado correctamente',
-                showConfirmButton: false,
-                timer: 1500
-            });
+				// Obtener los valores de los campos del formulario
+				var codigo = $("#idCodigo").val();
+				var nombre = $("#idNombre").val();
+				var paterno = $("#idPaterno").val();
+				var materno = $("#idMaterno").val();
+				var sexo = $("#idSexo").val();
+				var dni = $("#idDni").val();
+				var fecha = $("#usr1").val();
+				var celular = $("#idCelular").val();
+				var direccion = $("#idDireccion").val();
+				var codDis = $("#idDistrito").val();
 
-            // Redireccionar a la página de lista de clientes después de 1.5 segundos
-            setTimeout(function () {
-                window.location.href = "/cliente/lista";
-            }, 1500);
-        })
-        .fail(function () {
-            // Mostrar alerta de error si el registro falló
-            Swal.fire({
-                icon: 'error',
-                title: 'Error al grabar',
-                text: 'No se pudo grabar el cliente',
-                confirmButtonText: 'Cerrar'
-            });
-        })
-        .always(function () {
-            // Habilitar el botón de registro nuevamente
-            $("#Guardar").prop("disabled", false);
-        });
-});
-		
-		 
-	 </script>
-		
+				// Realizar la petición POST al controlador
+				$.post("/cliente/grabar", {
+					codigo: codigo,
+					nombre: nombre,
+					paterno: paterno,
+					materno: materno,
+					sexo: sexo,
+					dni: dni,
+					fecha: fecha,
+					celular: celular,
+					direccion: direccion,
+					distritoscliente: codDis
+				})
+					.done(function () {
+						// Mostrar alerta de éxito si el registro fue exitoso
+						Swal.fire({
+							icon: 'success',
+							title: 'Cliente ' + nombre + ' grabado correctamente',
+							showConfirmButton: false,
+							timer: 1500
+						});
+
+						// Redireccionar a la página de lista de clientes después de 1.5 segundos
+						setTimeout(function () {
+							window.location.href = "/cliente/lista";
+						}, 1500);
+					})
+					.fail(function () {
+						// Mostrar alerta de error si el registro falló
+						Swal.fire({
+							icon: 'error',
+							title: 'Error al grabar',
+							text: 'No se pudo grabar el cliente',
+							confirmButtonText: 'Cerrar'
+						});
+					})
+					.always(function () {
+						// Habilitar el botón de registro nuevamente
+						$("#Guardar").prop("disabled", false);
+					});
+			});
+		});
+
+	</script>
+
 
 	<script>
 		let codigoTipo = -1;
-		
-		
-			$(document).on("click", ".btn-editar", function () {
+
+
+		$(document).on("click", ".btn-editar", function () {
 			let cod;
 			//obtener el codigo del medicamento actual según el boton que se presiono
 			cod = $(this).parents("tr").find("td")[0].innerHTML;
@@ -336,9 +337,9 @@
 				console.log(response);
 			})
 		})
-		
-		
-		
+
+
+
 		$(document).on("click", ".btn-eliminar", function () {
 			let cod;
 			cod = $(this).parents("tr").find("td")[0].innerHTML;
@@ -388,27 +389,27 @@
 				});
 		}
 
-		
-		
-		
+
+
+
 		$('#tableCliente').DataTable({
 			"language": {
-				"url": "//cdn.datatables.net/plug-ins/1.10.25/i18n/Spanish.json" 
+				"url": "//cdn.datatables.net/plug-ins/1.10.25/i18n/Spanish.json"
 			}
 		});
 		$(function () {
 			$('#usr1').datepicker({
 				'format': 'yyyy-mm-dd',
 				'autoclose': true
-				
+
 			});
 
 		});
 		$('#usr1').on('changeDate show', function (e) {
 			$('#idRegistra').bootstrapValidator('revalidateField', $('#usr1'));
 		});
-		
-		
+
+
 		$(document).on("click", "#btn-cerrar", function () {
 			//resetear formulario
 			$("#idRegistra").trigger("reset");
@@ -416,9 +417,9 @@
 			//resetear validaciones
 			$("#idRegistra").data("bootstrapValidator").resetForm(true);
 		})
-		
-		
-		
+
+
+
 		//asignar evento change al select con ID idLaboratorio
 		$(document).on("change", "#idProvincia", function () {
 			//obtener el código del laboratorio actual
@@ -446,10 +447,10 @@
 		$('#tableClientes').DataTable({
 			language: {
 				search: "Buscar:"
-				
+
 			}
 		});
-		
+
 		$(document).ready(function () {
 
 			$('#idRegistra').bootstrapValidator({
@@ -468,7 +469,7 @@
 							}
 						}
 					},
-					
+
 					Paterno: {
 						selector: '#idPaterno',
 						validators: {
@@ -505,8 +506,8 @@
 							}
 						}
 					},
-					
-					
+
+
 					Fecha: {
 						selector: '#usr1',
 						validators: {
@@ -519,7 +520,7 @@
 							},
 						}
 					},
-					
+
 					Celular: {
 						selector: '#idCelular',
 						validators: {
@@ -540,7 +541,7 @@
 							}
 						}
 					},
-					
+
 					Provincia: {
 						selector: '#idProvincia',
 						validators: {

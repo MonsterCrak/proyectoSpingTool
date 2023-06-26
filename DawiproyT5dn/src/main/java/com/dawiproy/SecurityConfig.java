@@ -29,13 +29,13 @@ public class SecurityConfig{
 
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-		http.csrf().disable().authorizeHttpRequests().
-		requestMatchers("/validar/**").permitAll().
-		and().authorizeHttpRequests().
-		requestMatchers("/producto/**","/empleado/**","/sucursal/**","/cliente/**","/boleta/**").authenticated().
-		and().formLogin().loginPage("/validar/usuario").
-		defaultSuccessUrl("/validar/intranet");
-
+		
+		http.
+		authorizeHttpRequests().requestMatchers("/resources/img/**").permitAll().and().
+		authorizeHttpRequests().requestMatchers("/validar/**").permitAll().and().
+		authorizeHttpRequests().requestMatchers("/producto/**","/empleado/**","/sucursal/**","/cliente/**","/boleta/**").authenticated().and().
+		formLogin().loginPage("/validar/usuario").defaultSuccessUrl("/validar/intranet");
+		
 		return http.build();
 	}
 
@@ -43,12 +43,6 @@ public class SecurityConfig{
 	
 	@Bean
 	public UserDetailsService userDetailsService() {
-		/*UserDetails usuario1=User.withUsername("ana").password("{noop}123").roles("ADMIN").build();
-		UserDetails usuario2=User.withUsername("alicia").password("{noop}456").roles("USER").build();
-		
-		
-		return new InMemoryUserDetailsManager(usuario1,usuario2);*/
-		
 		return new Security();
 	}
 	
